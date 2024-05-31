@@ -14,7 +14,7 @@ Sql Server.
  https://caapp.bsite.net/swagger/index.html.
 
 # Android flutter run:
- Depois de clonar um projeto Flutter do GitHub, você precisará seguir alguns passos para executá-lo localmente. Vou fornecer uma visão geral dos passos necessários:
+ Depois de clonar o projeto, você precisará seguir alguns passos para executá-lo localmente. Vou fornecer uma visão geral dos passos necessários:
 
 Clonar o Repositório:
 Abra o terminal ou prompt de comando.
