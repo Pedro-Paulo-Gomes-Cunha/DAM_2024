@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rest_NetApi.Data\Rest_NetApi.Data.csproj" />
+    <ProjectReference Include="..\Rest_NetApi.Domain\Rest_NetApi.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
