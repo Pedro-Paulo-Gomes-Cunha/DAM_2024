@@ -1,4 +1,9 @@
 # DAM_2024
+# Integrantes do Grupo
+   Nome: Pedro Paulo Gomes Cunha   Número:928612456 E-mail: pedrogomesskeell@gmail.com 
+   Nome: Elizabeth Cristina Sebastião Mateus  Número: 921 158 331 E-mail:  
+   Nome: Leopoldo João Gonçalves Francisco Número:928081779 E-mail: leopoldomax48@gmail.com  
+   Nome: Jone Celestina Lengo  Número: 940 336 831  E-mail:
 
 # Tecnologías
 Frontend:
