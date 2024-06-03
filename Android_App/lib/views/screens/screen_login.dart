@@ -4,11 +4,13 @@ import 'package:bikeshared/models/user.dart';
 import 'package:bikeshared/services/shared_preferences_manager.dart';
 import 'package:bikeshared/views/components/auth_input_password.dart';
 import 'package:bikeshared/views/components/auth_link_footer.dart';
+import 'package:bikeshared/views/screens/screen_home.dart';
 import 'package:bikeshared/views/screens/screen_preloading.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/user_service.dart';
+import 'HelloWorl.dart';
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({super.key});
 
@@ -164,20 +166,24 @@ class _ScreenLoginState extends State<ScreenLogin> {
                           });
 
                           var userService=UserService();
-                         if( userService.logar(_email.text, _password.text)== 200){
+                          var result =await userService.logar(_email.text, _password.text);
+
+                           if( result== 200){
                            SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
                            String? email = sharedPreference.getString("email");
                            String? password = sharedPreference.getString("password");
                            FocusScopeNode keyboardCurrentFocus = FocusScope.of(context);
+
                            if (email == _email.text && password == _password.text) {
                              //Fechar o teclado do login
                              if (keyboardCurrentFocus.hasPrimaryFocus) {
                                keyboardCurrentFocus.unfocus();
                              }
-                             Navigator.push/*Replacement*/(
+
+                             Navigator.push(
                                  context,
                                  MaterialPageRoute(
-                                   builder: (context) => const ScreenPreloading(),
+                                   builder: (context) => const ScreenPreloading(),// ScreenHelloWorld(), //ScreenPreloading(),
                                  ));
 
                              Future.delayed(const Duration(seconds: 1),() {
@@ -186,82 +192,17 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                });
                              });
 
-                           }else {
-                             showModal('Falha na autenticação! Verifique os dados', size);
                            }
+                         }else {
+                           showModal('Falha na autenticação! Verifique os dados '+result.toString(), size);
                          }
 
-  
-                          /*simmm
-                          if (_formkey.currentState!.validate()) {
-                            
-                            int status = await UserController.activeUser(_email.text, "none");
-                            if(status == 0){
-
-                              Navigator.push/*Replacement*/(
-                                context, 
-                                MaterialPageRoute(
-                                builder: (context) => const ScreenPreloading(),/*ScreenHome()*/
-                              ));
-                            }else if (status == 1) {
-                              
-                              //showModal('Este email já existe!', size);
-                              Navigator.push/*Replacement*/(
-                                context, 
-                                MaterialPageRoute(
-                                builder: (context) => const ScreenPreloading(),/*ScreenHome()*/
-                              ));
-                            }else {
-                              showModal('Falha na autenticação! Verifique os dados', size);
-                            }
-                            
-                          }*/
-
                           Future.delayed(const Duration(seconds: 1),() {
-                            setState(() {
-                              isLoading = false;
+                           setState(() {
+                             isLoading = false;
                             });
-                          });
-                          /*Navigator.pushReplacement(
-                            context, 
-                            MaterialPageRoute(
-                            builder: (context) => const /*AccountLayout()*/ScreenHome(),
-                          ));
-                          
+                         });
 
-                          FocusScopeNode keyboardCurrentFocus = FocusScope.of(context);
-                          if (_formkey.currentState!.validate()) {
-                            /*tirar comentario
-                            var success = await UserService.login(_id.text, _password.text);*/
-                            var success = false;
-                            //Fechar o teclado do login
-                            if (keyboardCurrentFocus.hasPrimaryFocus) {
-                              keyboardCurrentFocus.unfocus();
-                            } 
-                            
-                            if (success) {
-                              Navigator.pushReplacement(
-                                context, 
-                                MaterialPageRoute(
-                                builder: (context) => const AccountLayout(), //HomeUser()//Splash(),
-                              ));
-                            }else{
-                              
-                              _password.clear();
-                              showModalBottomSheet(context: context, builder: (context)=>showMessageAuthError(context: context));
-                              
-                              /*ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('ID ou Senha inválida!', textAlign: TextAlign.center),
-                                  backgroundColor: Colors.redAccent,
-                                )
-                                
-                              );*/
-                            }
-
-                            
-                          }
-                          */
                         },
                       
                     ),),

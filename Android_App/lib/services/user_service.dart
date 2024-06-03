@@ -23,7 +23,8 @@ class UserService {
       await sharedPreference.setString('email', User_.email);
       await sharedPreference.setString('password', User_.password);
       //await sharedPreference.setBool('hasBikeShared', bool.fromEnvironment(hasBikeShared.first.text));
-      await sharedPreference.setInt('credit', User_.credit);
+    //  await sharedPreference.setDouble('credit', User_.credit);
+
       await sharedPreference.setString('Profile', User_.Profile);
     } else {
 
