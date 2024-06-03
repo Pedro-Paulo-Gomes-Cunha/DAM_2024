@@ -160,8 +160,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
 
                             var userService=UserService();
                             int status = await userService.CriarRegisto(_name.text, _password.text, _email.text);// UserController.activeUser(_email.text, _name.text, _password.text);
-                            if(status == 0){
-                              
+                            if(status == 200){
                               Navigator.push/*Replacement*/(
                                 context, 
                                 MaterialPageRoute(
@@ -171,7 +170,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                               //_password.clear();
                               showModal('Este email já existe!', size);
                             }else {
-                              showModal('Falha na autenticação! Verifique os dados', size);
+                              showModal('Falha na autenticação! Verifique os dados'+status.toString(), size);
                             }
                             
                             Future.delayed(const Duration(seconds: 1),() {

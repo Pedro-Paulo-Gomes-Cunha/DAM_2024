@@ -49,11 +49,34 @@ class UserService {
   }
 
   Future<int> CriarRegisto(String name, String password, String email) async {
-    await PutApi(name, password, email);
+    await SaveUser(name, password, email);
+
+    if (resposta.statusCode == 200) {
+      late http.Response response_2;
+      var url = Uri.parse(
+          'https://caapp.bsite.net/user/login?email=$email&password=$password');
+        response_2= await http.get(url, headers: {
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      });
+
+      final UserMap = jsonDecode(response_2.body);
+      var User_=User.fromJson(UserMap);
+      SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
+      sharedPreference.clear();
+      await sharedPreference.setString('Id', User_.id);
+      await sharedPreference.setString('name', User_.name);
+      await sharedPreference.setString('email', User_.email);
+      await sharedPreference.setString('password', User_.password);
+      //await sharedPreference.setBool('hasBikeShared', bool.fromEnvironment(hasBikeShared.first.text));
+      //  await sharedPreference.setDouble('credit', User_.credit);
+
+      await sharedPreference.setString('Profile', User_.Profile);}
     return resposta.statusCode;
   }
 
-  PutApi(String name, String password, String email) async {
+  SaveUser(String name, String password, String email) async {
     try {
       var url = Uri.parse('https://caapp.bsite.net/user');
       resposta = await http.post(url,
@@ -65,6 +88,7 @@ class UserService {
           body: jsonEncode(<String, String>{
             "name": name,
             "password": password,
+            "email": email,
             "profile": "user",
             "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
             "credit": "10",
