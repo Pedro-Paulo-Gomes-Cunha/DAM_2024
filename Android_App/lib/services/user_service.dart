@@ -15,7 +15,7 @@ class UserService {
     if (resposta.statusCode == 200) {
 
       final UserMap = jsonDecode(resposta.body);
-      var User_=User.fromJson(UserMap);
+      var User_=User.fromJson(UserMap); //
       SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
       sharedPreference.clear();
       await sharedPreference.setString('Id', User_.id);
@@ -23,7 +23,7 @@ class UserService {
       await sharedPreference.setString('email', User_.email);
       await sharedPreference.setString('password', User_.password);
       //await sharedPreference.setBool('hasBikeShared', bool.fromEnvironment(hasBikeShared.first.text));
-    //  await sharedPreference.setDouble('credit', User_.credit);
+      await sharedPreference.setDouble('credit', User_.credit);
 
       await sharedPreference.setString('Profile', User_.Profile);
     } else {
@@ -70,7 +70,7 @@ class UserService {
       await sharedPreference.setString('email', User_.email);
       await sharedPreference.setString('password', User_.password);
       //await sharedPreference.setBool('hasBikeShared', bool.fromEnvironment(hasBikeShared.first.text));
-      //  await sharedPreference.setDouble('credit', User_.credit);
+      await sharedPreference.setDouble('credit', User_.credit);
 
       await sharedPreference.setString('Profile', User_.Profile);}
     return resposta.statusCode;

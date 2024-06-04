@@ -16,7 +16,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
 
   final String? email = SharedPreferencesManager.sharedPreferences.getString("email");
 
-  late int? balance = SharedPreferencesManager.sharedPreferences.getInt("credit");
+  late double? balance = SharedPreferencesManager.sharedPreferences.getDouble("credit");
 
   final bool? hasBikeShared = SharedPreferencesManager.sharedPreferences.getBool("hasBikeShared");
   late Future <bool> credit;
@@ -41,7 +41,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
         future: credit,
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
-            balance = SharedPreferencesManager.sharedPreferences.getInt("credit");
+            balance = SharedPreferencesManager.sharedPreferences.getDouble("credit");
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Column(
@@ -79,7 +79,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
 
                   const SizedBox(height: 20),
                   const Text(
-                    "Bina alugada:",
+                    "Bike Alugada:",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
