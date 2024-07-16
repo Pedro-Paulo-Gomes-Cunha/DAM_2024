@@ -1,4 +1,5 @@
-﻿using Rest_NetApi.DBObjects.DBObjects;
+﻿using Rest_NetApi.Data.Context;
+using Rest_NetApi.DBObjects.DBObjects;
 using Rest_NetApi.Domain.DBObjects;
 using Rest_NetApi.Domain.DTOs;
 using Rest_NetApi.Domain.Interface.IRepository;
@@ -12,6 +13,7 @@ namespace Rest_NetApi.Data.Repositories
 {
     public class SolicitationRepository : BaseRepository<SolicitationDB>, ISolicitationRepository
     {
+        protected ContextDB Db = new();
         public SolicitationRepository() { }
         public IEnumerable<SolicitationDto> FindAll()
         {
@@ -25,6 +27,13 @@ namespace Rest_NetApi.Data.Repositories
             if (dbObject == null) return null;
 
             return dbObject.ToDto();
+        }
+
+        public SolicitationDto FindLastSolicitationByUserId(Guid id)
+        {  var resultSolicitation=new SolicitationDto();
+           var result = Db.Solicitations.LastOrDefault(a => a.UserId==id);
+            if (result != null) resultSolicitation = result.ToDto();
+            return resultSolicitation;
         }
 
         public void RemoveSolicitation(Guid id)

@@ -53,7 +53,7 @@ class _ScreenLocationsState extends State<ScreenLocations> {
   void initState() {
 
     super.initState();
-    listStations = getStations();
+    listStations = StationController.listStations2();//getStations();
 
     /*double distance = calculateDistance(widget.sourceLocation.latitude, widget.sourceLocation.longitude,
      widget.destination.latitude, widget.destination.longitude);
@@ -191,9 +191,7 @@ class _ScreenLocationsState extends State<ScreenLocations> {
   }
 
   Future<List<Station>> getStations() async{
-
     return StationRepository.list;
-
   }
 
 }

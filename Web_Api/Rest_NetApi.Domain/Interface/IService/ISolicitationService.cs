@@ -9,5 +9,6 @@ namespace Rest_NetApi.Domain.Interface.IService
 {
     public interface ISolicitationService:IServiceBase<SolicitationDto>
     {
+        SolicitationDto FindLastSolicitationByUserId(Guid id);
     }
 }

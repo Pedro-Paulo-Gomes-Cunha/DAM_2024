@@ -8,8 +8,7 @@ import 'package:bikeshared/views/screens/screen_home.dart';
 import 'package:bikeshared/views/screens/screen_trajectory.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:http/http.dart' as http;
+
 
 class ScreenSolicitations extends StatefulWidget {
   const ScreenSolicitations({super.key});
@@ -68,22 +67,6 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
             height: size.height,
             child: SingleChildScrollView(
               child: Column(children: [
-                /*SizedBox(height: size.height*0.04,),
-                SizedBox(
-                  width: size.width,    
-                  child:
-                      const Text(
-                        'Estações',style: 
-                        TextStyle(fontSize: 21,color: Color.fromARGB(255, 54, 122, 66)),
-                        textAlign: TextAlign.center,
-                  ),
-                ),*/
-                
-                /*SizedBox(height: size.height*0.04,),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: const Text("  14-12-2022",style: TextStyle(fontSize: 13),),
-                ),*/
                 FutureBuilder<List<Solicitation>>(
                   future: listSolicitations,
                   builder: ((context, snapshot) {
@@ -199,44 +182,6 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
             ) 
           ),
           const SizedBox(height: 25,),
-          /*if(solicitation.hasBikeShared == true)
-          ElevatedButton(
-            style: ButtonStyle(                  
-              padding: MaterialStateProperty.all(const EdgeInsets.only(left:30, right: 30, top: 5, bottom: 5)),
-              backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 248, 36, 36)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-            ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,  
-              children: [
-                Text(
-                  "Devolver", 
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                )
-              ],
-            ),
-            onPressed: () async{
-              /*SharedPreferences sharedPreference = await SharedPreferences.getInstance();
-              await sharedPreference.clear();
-              Navigator.of(context).pop();
-              Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) => const ScreenLogin(),
-              ));*/
-              final String? email = SharedPreferencesManager.sharedPreferences.getString("email");
-              bool? status = await StationController.returnedBike(solicitation.station, email);
-              if(status == 200){
-                showModal('Bina devolvida com sucesso!', context);
-              }else if (status == 0) {
-                showModal('Bina nao devolvida', context);
-              }
-            },
-
-          ),*/
-
           if(solicitation.stationReturn != "")
           Column(
             children: [
@@ -325,8 +270,6 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
 
   Future<List<Solicitation>> getSolicitations() async{
     return SolicitationRepository.list;
-    //SharedPreferences sharedPreference = await SharedPreferences.getInstance();
-
   }
 
   showModal(message, context){

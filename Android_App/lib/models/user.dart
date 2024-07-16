@@ -24,6 +24,6 @@ class User{
         name = json['name'] as String,
         email = json['email'] as String,
         password = json['password'] as String,
-        credit =10.00,//json['credit'] as double, //Helping.checkDouble(json['credit']),
+        credit =Helping.checkDouble(json['credit']),
         Profile = json['profile'] as String;
 }

@@ -21,12 +21,11 @@ namespace Rest_NetApi.Api
         {
             services.AddDbContext<ContextDB>();
             services.AddControllers();
-           // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddSwaggerGen(c =>
             {    
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "caapp.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "bike_shared.API", Version = "v1" });
             });
-
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -45,19 +44,17 @@ namespace Rest_NetApi.Api
                          .AllowAnyOrigin()
                          .AllowAnyMethod()
                          .AllowAnyHeader());
-            
 
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "caapp.API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "bike_shared.API");
             });
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

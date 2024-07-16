@@ -6,6 +6,7 @@ using Rest_NetApi.Domain.DTOs;
 using Rest_NetApi.Domain.Entities;
 using Rest_NetApi.Domain.Interface.IRepository;
 using Rest_NetApi.Domain.Interface.IService;
+using Rest_NetApi.Domain.Validation;
 
 namespace Rest_NetApi.Domain.Service
 {
@@ -20,6 +21,10 @@ namespace Rest_NetApi.Domain.Service
         public void Save(UserDto obj)
         {
             var userEntiy = obj.ToEntity();
+            if (EmailValidation.IsValid(userEntiy.Email) == false)
+            {
+                throw new Exception("Campo Email é obrigatório, retifique o email");
+            }
             if (string.IsNullOrWhiteSpace(userEntiy.Name))
             {
                 throw new Exception("Campo Nome é obrigatório!");
@@ -29,9 +34,14 @@ namespace Rest_NetApi.Domain.Service
                 throw new Exception("Campo Senha é Obrigatório!");
             }
 
-            if (_repositoryWrapper.UserRepository.FindByUserName(userEntiy.Name) != null)
+           /* if (_repositoryWrapper.UserRepository.FindByUserName(userEntiy.Name) != null)
             {
                 throw new Exception("Já existe um usuário com este nome!");
+            }*/
+
+            if (_repositoryWrapper.UserRepository.FindByEmail(userEntiy.Email) != null)
+            {
+                throw new Exception("Já existe um usuário com este email!");
             }
 
             _repositoryWrapper.UserRepository.Save(userEntiy.ToDto());
@@ -60,6 +70,12 @@ namespace Rest_NetApi.Domain.Service
         public void Update(UserDto obj)
         {
             var userEntiy = obj.ToEntity();
+
+            if (EmailValidation.IsValid(userEntiy.Email) == false)
+            {
+                throw new Exception("Campo Email é obrigatório, retifique o email");
+            }
+
             if (string.IsNullOrWhiteSpace(userEntiy.Name))
             {
                 throw new Exception("Campo Nome é obrigatório");
@@ -68,10 +84,10 @@ namespace Rest_NetApi.Domain.Service
             {
                 throw new Exception("Campo Senha é Obrigatório");
             }
-
-            if (_repositoryWrapper.UserRepository.FindByUserName(userEntiy.Name) != null)
+            var response = _repositoryWrapper.UserRepository.FindByEmail(userEntiy.Email);
+            if (response != null && response.Id!= userEntiy.Id)
             {
-                throw new Exception("Já existe um usuário com este nome");
+                throw new Exception("Já existe um usuário com este email!");
             }
             _repositoryWrapper.UserRepository.UpdateUser(obj);
         }

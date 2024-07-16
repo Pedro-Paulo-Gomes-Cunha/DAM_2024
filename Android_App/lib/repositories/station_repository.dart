@@ -3,11 +3,11 @@ import 'package:bikeshared/models/station.dart';
 
 class StationRepository {
     static late List<Station> list = [];
-    
-    static final List<Station> list1 = [
+    static final List<Station> list1 =[];
+    static final List<Station> list2 = [
     Station(
       stationId: "D01_Station",
-      name: 'Escola Nacional de Policia',
+      name: 'Escola Nacional de Policia',//'Departamento da Computação',
       address: 'Camama 1',
       lat: -8.8905235,
       long: 13.2274002,
@@ -19,7 +19,7 @@ class StationRepository {
     ),
     Station(
       stationId: "D02_Station",
-      name: 'Espaço Lazer Txuly',
+      name: 'Espaço Lazer Nandex',//'Departamento de Física',
       address: 'Camama 1',
       lat: -8.8649484,
       long: 13.2939577,
@@ -31,8 +31,8 @@ class StationRepository {
     ),
     Station(
       stationId: "D03_Station",
-      name: 'New CVS',
-      address: 'Camama 2',
+      name: 'Departamento de Química',
+      address: 'Camama 1',
       lat: -8.7663581,
       long: 13.2482776,
       capacity: 10,
@@ -40,6 +40,6 @@ class StationRepository {
       totalGets: 0,
       totalReturns: 0,
       availableBikeShared: 5,
-    ) 
-  ];
+    )
+    ];
 }

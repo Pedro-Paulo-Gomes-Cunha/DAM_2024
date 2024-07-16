@@ -2,6 +2,8 @@ import 'package:bikeshared/controllers/StationController.dart';
 import 'package:bikeshared/services/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/solicitation_service.dart';
+
 
 class ScreenProfile extends StatefulWidget {
 
@@ -85,7 +87,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                   const SizedBox(height: 5),
 
                   
-                  (StationController.globalHasBikeShared==false)?
+                  (SolicitationService.globalHasBikeShared==false)?
                   const Text(
                     "Nenhuma",
                     style: TextStyle(fontSize: 18),

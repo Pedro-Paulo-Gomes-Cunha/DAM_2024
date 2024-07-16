@@ -17,25 +17,17 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
 
-  //final _id = TextEditingController();
-  //final _password = TextEditingController();
-  //final _formkey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
     verifyToken().then((value) {
-      //print("antes");
       if (value == true) {
-        //print("Não devia");
         Timer(const Duration(seconds: 3),(){
           Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) =>const ScreenPreloading())
           );
         });
       } else {
-        /*print("Token");
-        print(value);*/
         Timer(const Duration(seconds: 3),(){
           Navigator.pushReplacement(context, 
             MaterialPageRoute(builder: (context) =>const ScreenLogin())
@@ -49,7 +41,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Splash()/*CircularProgressIndicator()*/,
+        child: Splash(),
       ),
     );
 
@@ -59,13 +51,7 @@ class _StartPageState extends State<StartPage> {
     SharedPreferences sharedPreference = await SharedPreferences.getInstance();
 
     if (sharedPreference.getString('token') != "" && sharedPreference.getString('email') != null) {
-      /*print(sharedPreference.getString('token'));
-      print("Nooo");
-      print("Null:");
-      print(sharedPreference.getString('token')==null);
-      print(sharedPreference.getString('token'));
-      print("Vazio:");
-      print(sharedPreference.getString('token')=="");*/
+
       return true;
     }else{
       return false;

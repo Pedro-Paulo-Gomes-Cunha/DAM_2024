@@ -1,5 +1,4 @@
 
-import 'package:bikeshared/views/screens/screen_config_ip.dart';
 import 'package:bikeshared/views/screens/screen_home.dart';
 import 'package:flutter/material.dart';
 
@@ -23,23 +22,6 @@ class _ScreenHelloWorld extends State<ScreenHelloWorld> {
       );
   }
 
-  /*AppBar buildAppBar(){
-    return AppBar(
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) => const ScreenHome(),
-          ));
-        },
-      ),
-      backgroundColor: const Color.fromARGB(255, 0, 59, 114),
-      title: const Text('Sobre BikeShared'),
-      //centerTitle: true,
-    );
-  }*/
-
 
   buildBody(){
     Size size = MediaQuery.of(context).size;
@@ -58,26 +40,8 @@ class _ScreenHelloWorld extends State<ScreenHelloWorld> {
                 SizedBox(
                   width: size.width*0.8,
                   height: 40.0,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      //shape: const CircleBorder(),
-                      backgroundColor: const Color.fromARGB(255, 0, 14, 27),
-                      shadowColor: const Color.fromARGB(255, 0, 0, 0),
-                      //padding: EdgeInsets.all(24)
-
-                    ),
-                    onPressed: () async{
-
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ScreenConfigIp(),
-                          ));
-                    },
-
-                    child: const Text("Hello World"),
+                  child:  const Text("Hello World"),
                   ),
-                ),
               ])
           ),
         ),

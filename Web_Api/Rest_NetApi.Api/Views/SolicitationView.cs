@@ -12,10 +12,11 @@ namespace Rest_NetApi.Api.Views
         public double longitude { get; set; }
         public bool hasBikeShared { get; set; }
         public string stationReturn { get; set; }
+        public string UserId { get; set; }
 
 
         public SolicitationView() { }
-        public SolicitationView(Guid id, string station, string address, double latitutde, double longitude, bool hasBikeShared, string stationReturn)
+        public SolicitationView(Guid id, string station, string address, double latitutde, double longitude, bool hasBikeShared, string stationReturn, string userId)
         {
             Id = id;
             this.station = station;
@@ -24,11 +25,12 @@ namespace Rest_NetApi.Api.Views
             this.longitude = longitude;
             this.hasBikeShared = hasBikeShared;
             this.stationReturn = stationReturn;
+            UserId = userId;    
         }
 
         public SolicitationDto ToDto()
         {
-            return new SolicitationDto(this.Id, this.station, this.address, this.latitutde, this.longitude, this.hasBikeShared, this.stationReturn);
+            return new SolicitationDto(this.Id, Guid.Parse(this.station), this.address, this.latitutde, this.longitude, this.hasBikeShared, Guid.Parse(this.stationReturn), Guid.Parse(this.UserId));
         }
     }
 }

@@ -72,18 +72,6 @@ class _ScreenRegisterState extends State<ScreenRegister> {
               child: Image.asset('images/kit/bolinha.png',height: 140,)
             ),
 
-            /*Container(
-                margin: EdgeInsets.only(top: size.height*0.085),
-                height: 130,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/kit/LOGO_BAIKAPAY.png'),
-                    //fit:BoxFit.cover,
-                  )
-                ),
-                
-            ),*/
-
             SingleChildScrollView(
               padding: EdgeInsets.only(top: size.height*0.2,right: 35, left: 35),
               child:Form(
@@ -131,7 +119,6 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                         'Por favor, digite uma senha maior que 6 caracteres',
                       ],
                     ),
-                
                     const SizedBox(
                       height: 20,
                     ),
@@ -152,22 +139,21 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                             isLoading = true;
                           });
 
-                          print(_email.text);
+                         /* print(_email.text);
                           print(_name.text);
-                          print(_password.text);
+                          print(_password.text);*/
                           
                           if (_formkey.currentState!.validate()) {
 
                             var userService=UserService();
                             int status = await userService.CriarRegisto(_name.text, _password.text, _email.text);// UserController.activeUser(_email.text, _name.text, _password.text);
                             if(status == 200){
-                              Navigator.push/*Replacement*/(
+                              Navigator.push(
                                 context, 
                                 MaterialPageRoute(
-                                builder: (context) => const ScreenPreloading(),/*ScreenHome()*/
+                                builder: (context) => const ScreenLogin(),
                               ));
                             }else if (status == 1) {
-                              //_password.clear();
                               showModal('Este email já existe!', size);
                             }else {
                               showModal('Falha na autenticação! Verifique os dados'+status.toString(), size);
@@ -178,35 +164,6 @@ class _ScreenRegisterState extends State<ScreenRegister> {
                                 isLoading = false;
                               });
                             });
-                            //final user = UserRepository.tabela;
-                            /*limpa SharedPreferencesManager.init();
-                            SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
-                            
-                            users.forEach((user) { 
-                              if (user.email == _id.text && user.password == _password.text) {
-                                authStatus = true;
-                                userExist = user;
-                                print("Temmmmmmmmmmm");
-                                return;
-                              }
-                            });
-
-                            if(authStatus==true){
-
-                              await sharedPreference.setString('token', "${userExist.id}");
-                              await sharedPreference.setString('name', userExist.name);
-                              await sharedPreference.setString('email', userExist.email);
-                              await sharedPreference.setInt('point', 10);
-                              print("yas");
-
-                              Navigator.pushReplacement(
-                                context, 
-                                MaterialPageRoute(
-                                builder: (context) => const ScreenHome(),
-                              ));
-                            }fimlimpa*/
-                            
-                            
                           }
                           Future.delayed(const Duration(seconds: 1),() {
                             setState(() {

@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 
 class UserService {
   late http.Response resposta;
+
   Future<int> logar(String email, String password) async {
     await search(email, password);
     if (resposta.statusCode == 200) {
@@ -18,7 +19,7 @@ class UserService {
       var User_=User.fromJson(UserMap); //
       SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
       sharedPreference.clear();
-      await sharedPreference.setString('Id', User_.id);
+      await sharedPreference.setString('UserId', User_.id);
       await sharedPreference.setString('name', User_.name);
       await sharedPreference.setString('email', User_.email);
       await sharedPreference.setString('password', User_.password);
@@ -35,8 +36,11 @@ class UserService {
 
   search(String email, String password) async {
     try {
-      var url = Uri.parse(
-          'https://caapp.bsite.net/user/login?email=$email&password=$password');
+
+      String stringconection="${Env.url}/user/login?email=$email&password=$password";
+      var url= Uri.parse(stringconection);
+
+     // var url = Uri.parse('http://192.168.1.10:8041/user/login?email=$email&password=$password');
       var response = await http.get(url, headers: {
         "Access-Control-Allow-Origin": "*",
         'Content-Type': 'application/json',
@@ -51,34 +55,31 @@ class UserService {
   Future<int> CriarRegisto(String name, String password, String email) async {
     await SaveUser(name, password, email);
 
+    //'http://192.168.1.10:8041/user/login?email=$email&password=$password');
+
     if (resposta.statusCode == 200) {
+      String stringconection="${Env.url}/user/login?email=$email&password=$password";
+
       late http.Response response_2;
       var url = Uri.parse(
-          'https://caapp.bsite.net/user/login?email=$email&password=$password');
+          stringconection);
         response_2= await http.get(url, headers: {
         "Access-Control-Allow-Origin": "*",
         'Content-Type': 'application/json',
         'Accept': '*/*'
       });
 
-      final UserMap = jsonDecode(response_2.body);
-      var User_=User.fromJson(UserMap);
       SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
       sharedPreference.clear();
-      await sharedPreference.setString('Id', User_.id);
-      await sharedPreference.setString('name', User_.name);
-      await sharedPreference.setString('email', User_.email);
-      await sharedPreference.setString('password', User_.password);
-      //await sharedPreference.setBool('hasBikeShared', bool.fromEnvironment(hasBikeShared.first.text));
-      await sharedPreference.setDouble('credit', User_.credit);
-
-      await sharedPreference.setString('Profile', User_.Profile);}
+      }
     return resposta.statusCode;
   }
 
   SaveUser(String name, String password, String email) async {
     try {
-      var url = Uri.parse('https://caapp.bsite.net/user');
+      //var url = Uri.parse('http://192.168.1.10:8041/user');
+      String stringconection="${Env.url}/user";
+      var url= Uri.parse(stringconection);
       resposta = await http.post(url,
           headers: {
             "Access-Control-Allow-Origin": "*",

@@ -10,13 +10,13 @@ using Rest_NetApi.Domain.Service;
 
 namespace Rest_NetApi.Api.Controllers
 {
-    [Route("/solicitations")]
+    [Route("/stations")]
     [ApiController]
-    public class SolicitationController : ControllerBase
+    public class StationController : ControllerBase
     {
-        private readonly ISolicitationService _service;
+        private readonly IStationService _service;
 
-        public SolicitationController(ISolicitationService Service)
+        public StationController(IStationService Service)
         {
             _service = Service;
         }
@@ -35,13 +35,11 @@ namespace Rest_NetApi.Api.Controllers
             {
                 //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-
             }
-
         }
 
         [HttpPost()]
-        public IActionResult Add([FromBody] SolicitationView dado)
+        public IActionResult Add([FromBody] StationView dado)
         {
             try
             {
@@ -51,14 +49,11 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
-                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-
             }
-          
         }
         [HttpPut()]
-        public IActionResult Put(SolicitationView dado)
+        public IActionResult Put(StationView dado)
         {
             try
             {
@@ -68,11 +63,8 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
-                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-
             }
-
         }
 
         [HttpDelete("{id}")]
@@ -86,11 +78,8 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
-                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-
             }
-
         }
 
         [HttpGet("{id}")]
@@ -109,35 +98,61 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpGet()]
+        [Route("/stations/byname")]
+
+        public IActionResult GetByName(string name)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var result = _service.FindByStationName(name).Select(ViewParser.Parse);
+
+                if (result == null) return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
                 //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
 
             }
         }
-        //[HttpGet()]
-        //[Route("/denuncy/byuserid")]
-
-        //public IActionResult GetByUserId(Guid id)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //            return BadRequest();
-
-        //        var result = _service.FindByUserId(id).Select(ViewParser.Parse);
-
-        //        if (result == null) return NotFound();
-
-        //        return Ok(result);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        //add logs
-        //        return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-
-        //    }
 
 
-        //}
-    }
+
+            //}
+            //[HttpGet()]
+            //[Route("/denuncy/byuserid")]
+
+            //public IActionResult GetByUserId(Guid id)
+            //{
+            //    try
+            //    {
+            //        if (!ModelState.IsValid)
+            //            return BadRequest();
+
+            //        var result = _service.FindByUserId(id).Select(ViewParser.Parse);
+
+            //        if (result == null) return NotFound();
+
+            //        return Ok(result);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        //add logs
+            //        return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
+            //    }
+
+
+            //}
+        }
 }

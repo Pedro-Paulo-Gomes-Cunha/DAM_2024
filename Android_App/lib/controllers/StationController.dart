@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:bikeshared/env.dart';
 import 'package:bikeshared/models/solicitation.dart';
 import 'package:bikeshared/models/station.dart';
@@ -40,7 +42,7 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
   }
 
   static loadingStation() {
-    final stations = StationRepository.list;
+    final stations = StationRepository.list1;
     stations.forEach((station) async { 
       markers.add(
         Marker(
@@ -90,7 +92,6 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
           polylineId: const PolylineId('polyLine'),
           color: const Color(0xFF08A5CB),
           points: polylineCoordinates));
-      
       }
   }
 
@@ -112,16 +113,10 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
       Position position = await _positionCurrent();
       lat = position.latitude;
       long = position.longitude;
-      
-      //_mapsController.animateCamera(CameraUpdate.newLatLng(LatLng(lat, long)));
-      //return LatLng(lat, long);
     } catch (e) {
-      //error = e.toString();
-      //return const LatLng(-1,-1);
       lat = 0;
       long = 0;
     }
-    
   }
 
   static Future<Position>_positionCurrent() async{
@@ -148,145 +143,42 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
   }
 
   static Future<bool> testPing() async{
-    //SharedPreferences sharedPreference = await SharedPreferences.getInstance();
-    const xmlBody = '''
-      
-      <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdl="http://ws.bikeshareds.org/">
-        <soap:Header/>
-        <soap:Body>
-          <wsdl:test_ping>
-          <input_message>OLA</input_message>
-          </wsdl:test_ping>
-          <!-- Adicione mais elementos aqui, conforme necessário, para enviar os parâmetros -->
-        </soap:Body>
-      </soap:Envelope>
-    ''';
-    try {
-      
-      final url = Uri.parse(Env.url);
-
-      http.Response response = await http.post(
-        url,
-        /*headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            /*HttpHeaders.authorizationHeader: "...",*/
-        },*/
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8',
-        },
-        body: xmlBody
-      );
-      if (response.statusCode == 200) {
-        //await sharedPreference.setString('token', "${jsonDecode(response.body)['token']}");
-        //print(jsonDecode(response.body)['token']);
-        print('Deu certo');
-        final xmlString = response.body;
-        final document = xml.XmlDocument.parse(xmlString);///XmlDocument.parse(xmlString);
-        //document.findAllElements('wsdl:test_ping');
-        print(document.findAllElements('return').first.text);
         return true;
-      }else if(response.statusCode == 503){
-        print('Servidor indisponível');
-        print(response.body);
-        return false;
-      }else if(response.statusCode == 500){
-        print('Falha na requisição');
-        print(response.body);
-        return false;
-      }else{
-        print('Erro na autenticação');
-        print(response.body);
-        return false;
-      }
-    } catch (e) {
-      //print('Tempo de execução demorada!');
-      //print(e);
-      print(e.toString());
-      return false;
-      //rethrow;
-    }
   }
 
   static Future<bool> listStations() async{
-    
     //SharedPreferences sharedPreference = await SharedPreferences.getInstance();
-    final xmlBody = '''
-      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.bikeshareds.org/">
-        <soapenv:Header/>
-        <soapenv:Body>
-          <ws:listStations>
-            <numberOfStations>3</numberOfStations>
-            <coordinates>
-              <x>$lat</x>
-              <y>$long</y>
-            </coordinates>
-          </ws:listStations>
-        </soapenv:Body>
-      </soapenv:Envelope>
-    ''';
     try {
-      
-      final url = Uri.parse(Env.url);
 
-      http.Response response = await http.post(
-        url,
-        /*headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            /*HttpHeaders.authorizationHeader: "...",*/
-        },*/
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8',
-        },
-        body: xmlBody
-      );
+      String stringconection="${Env.url}/stations";
+      var url= Uri.parse(stringconection);
+
+      http.Response response = await http.get(url, headers: {
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      });
       if (response.statusCode == 200) {
-        //await sharedPreference.setString('token', "${jsonDecode(response.body)['token']}");
-        //print(jsonDecode(response.body)['token']);
-        print('Deu certo');
-        final xmlString = response.body;
-        final document = xml.XmlDocument.parse(xmlString);///XmlDocument.parse(xmlString);
-        final x = document.findAllElements('stations');
-        /*x.map((e) {
-          print(e.findAllElements("coordinate").first.text);
-        },);*/
-        print(x);
-        
+       // final xmlString = response.body;
+       // final document =jsonDecode(xmlString);//xml.XmlDocument.parse(xmlString);
+        //final x = document.findAllElements('stations');
+        final Map = jsonDecode(response.body);
         StationRepository.list =[];
+        for (var item in Map) { //Adicionar as estações no repositório local
+          StationRepository.list.add(Station.fromJson(item));
+        }
+        
+      /*  StationRepository.list =[];
         for (var stationElement in x) {
-
-          print("passou");
           final id = stationElement.findElements('id').first.text;
           final coordinate = stationElement.findAllElements('coordinate').single;
-
-          final double lat2 = double.parse(coordinate.findElements('x').first.text);
-          final double long2 = double.parse(coordinate.findElements('y').first.text);
-          print('x: $lat2');
-          print('y: $long2');
-          /*for (var coordinate in coordinates) {
-            print("passou 2");
-            final double lat2 = double.parse(coordinate.findElements('lat').first.text);
-            final double long2 = double.parse(coordinate.findElements('y').first.text);
-            print('x: $lat2');
-            print('y: $long2');
-          }*/
-          //print('coordinates: $coordinates');
-          
-          
+          final double lat2 = double.parse(coordinate.findElements('latitude').first.text);
+          final double long2 = double.parse(coordinate.findElements('longitude').first.text);
           final int capacity = int.parse(stationElement.findElements('capacity').first.text);
           final totalGets = int.parse(stationElement.findElements('totalGets').first.text);
           final totalReturns = int.parse(stationElement.findElements('totalReturns').first.text);
           final availableBikeShared = int.parse(stationElement.findElements('availableBikeShared').first.text);
           final freeDocks = int.parse(stationElement.findElements('freeDocks').first.text);
-
-          print('ID: $id');
-          print('Capacity: $capacity');
-          print('Total Gets: $totalGets');
-          print('Total Returns: $totalReturns');
-          print('Available Bike Shared: $availableBikeShared');
-          print('Free Docks: $freeDocks');
-          print('-----------------------');
 
 
           StationRepository.list.add(
@@ -304,32 +196,46 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
             )
           );
 
-        }
-
-        //print(StationRepository.list);
-
+        }*/
         return true;
-      }else if(response.statusCode == 503){
-        print('Servidor indisponível');
-        print(response.body);
-        return false;
-      }else if(response.statusCode == 500){
-        print('Falha na requisição');
-        print(response.body);
-        return false;
       }else{
-        print('Erro na autenticação');
-        print(response.body);
         return false;
       }
     } catch (e) {
-      //print('Tempo de execução demorada!');
-      //print(e);
-      print(e.toString());
       return false;
-      //rethrow;
     }
   }
+
+  static Future<List<Station>> listStations2() async{
+    //SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+
+      String stringconection="${Env.url}/stations";
+      var url= Uri.parse(stringconection);
+      List<Station> list =[];
+
+      http.Response response = await http.get(url, headers: {
+        "Access-Control-Allow-Origin": "*",
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      });
+      if (response.statusCode == 200) {
+        // final xmlString = response.body;
+        // final document =jsonDecode(xmlString);//xml.XmlDocument.parse(xmlString);
+        //final x = document.findAllElements('stations');
+        final Map = jsonDecode(response.body);
+
+        print("ok");
+        for (var item in Map) { //Adicionar as estações no repositório local
+          list.add(Station.fromJson(item));
+          print(Station.fromJson(item).name);
+        }}
+
+      return list;
+  }
+
+
+
+
 
   static Future<int> solicitation(stationId,email) async{
     //SharedPreferences sharedPreference = await SharedPreferences.getInstance();
@@ -400,13 +306,14 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
       //.toList();
       SolicitationRepository.list.add(
         Solicitation(
-          id: 2,
+          id: "2",
           station: stationId,
           address: 'Camama',
           lat: data.lat/*-8.8662710*/,
           long: data.long/*13.284544*/,
           hasBikeShared: true,
           stationReturn: "",
+            userid: ""
         )
       );
       
@@ -450,13 +357,14 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
       //.toList();
       SolicitationRepository.list.add(
         Solicitation(
-          id: 2,
+          id: "2",
           station: stationId,
           address: 'Camama',
           lat: data.lat/*-8.8662710*/,
           long: data.long/*13.284544*/,
           hasBikeShared: true,
           stationReturn: "",
+            userid: ""
         )
       );
       print(e.toString());

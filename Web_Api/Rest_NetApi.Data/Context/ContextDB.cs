@@ -34,7 +34,7 @@ namespace Rest_NetApi.Data.Context
          {
             ////"User=.;Password=SurielSuriel;Database=project;Server=SQLEXPRESS;
            // var stringConexao = "Data Source=DESKTOP-G4UNLMH\\SQLEXPRESS;Database=TesteDB1;Integrated Security=True;TrustServerCertificate=true;MultipleActiveResultSets=true";
-           var stringConexao = "Server=USER\\SQLEXPRESS;Database=dam2024;User=.;Password=123456789;Integrated Security=True;TrustServerCertificate=true";
+           var stringConexao = "Server=USER\\SQLEXPRESS;Database=dam_2024;User=.;Password=123456789;Integrated Security=True;TrustServerCertificate=true";
             options.UseSqlServer(stringConexao);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

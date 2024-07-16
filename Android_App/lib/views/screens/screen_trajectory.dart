@@ -45,25 +45,6 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
   List<LatLng> polylineCoordinates = [];
   late PolylinePoints polylinePoints;
 
-  //late PolylinePoints polylinePoints;
-
-  /*void setPolyPoints(LatLng origin, LatLng destination) async{
-    //final String polylineIdVal = 'polyline_$polylineIdCount';
-    
-    _polylines.add(
-      Polyline(
-        polylineId: const PolylineId('kPolyline'),
-        points: [
-          origin,//LatLng(-8.8645981, 13.2989975),
-          destination//LatLng(-8.8643581, 13.2932776)
-        ],
-        width: 3,
-        endCap: Cap.roundCap,
-        color: const Color.fromARGB(255, 35, 112, 148),
-      )
-    );
-  }*/
-
   double degreesToRadians(double degrees) {
     return degrees * pi / 180;
   }
@@ -85,19 +66,12 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
   }
 
   void setPolylines() async{
-    //print("Antes");
-    
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleKey, 
       PointLatLng(widget.sourceLocation.latitude, widget.sourceLocation.longitude), 
       PointLatLng(widget.destination.latitude, widget.destination.longitude));
-      /*print("Depois");
-      print(result.status);
-      print(result.points);*/
       if (result.points.isNotEmpty) {
         for (var point in result.points) {
-          /*print("Entrou");
-          print(point);*/
           polylineCoordinates.add(
             LatLng(point.latitude, point.longitude)
           );
@@ -154,17 +128,12 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
   }
 
   void loadingStation () {
-    //print("thjerhtrjek");
     final stations = StationRepository.list;
     for (var station in stations) { 
       markers.add(
         Marker(
           markerId: MarkerId(station.name),
           position: LatLng(station.lat,station.long),
-          /*icon: await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(),
-            'images/bike.png'
-          ),//Icon(Icons.pedal_bike_sharp),*/
           onTap: ()=>{
             showModalBottomSheet(
               context: context, builder: (context)=> modalSolicitation(context, station),
@@ -175,8 +144,6 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
-                  //bottomRight: Radius.circular(30),
-                  //bottomLeft: Radius.circular(30),
                 ),
               ),
             )
@@ -199,30 +166,14 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
     getPosition();
     loadingStation();
 
-    /*double distance = */calculateDistance(widget.sourceLocation.latitude, widget.sourceLocation.longitude,
+    calculateDistance(widget.sourceLocation.latitude, widget.sourceLocation.longitude,
      widget.destination.latitude, widget.destination.longitude);
-
-    //double roundedDistance = double.parse(distance.toStringAsFixed(2));
-    //print("Distancia entre pontos $roundedDistance");
   }
 
   @override
   Widget build(BuildContext context) {
     
-    // ignore: prefer_typing_uninitialized_variables
-    /*final container;
-    if (currentPage == DrawerSelectOptions.home) {
-      container = const HomeUser();
-    } else if(currentPage == DrawerSelectOptions.locations){
-      container = const HistoricUser();
-    }else if(currentPage == DrawerSelectOptions.solicitations){
-      container = const Settings();
-    }else if(currentPage == DrawerSelectOptions.help){
-      container = const Help();
-    }*/
 
-    
-    //print(markers);
     return 
     Scaffold(
       //key: appKey,
@@ -233,11 +184,6 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
         
         create: (context)=>StationController(),*/
         Builder(builder: (context){
-          
-          /*final local = context.watch<StationController>();*/
-          /*print(lat);
-          print(long);*/
-          /*print(polylineCoordinates);*/
           return GoogleMap(
             initialCameraPosition: CameraPosition(
               target: /*sourceLocation*/LatLng(lat, long),
@@ -255,18 +201,8 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
               getPosition();
               loadingStation();
               setPolylines();
-              //setPolyPoints(sourceLocation2, destination2);
             },
             polylines: _polylines,
-            /*polylines: {
-
-              Polyline(
-                polylineId: const PolylineId("kPolyline"),
-                points: polylineCoordinates,
-                color: Colors.black12,
-                width: 6
-              )
-            }*/
           );
           
         }),
@@ -290,8 +226,6 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
         
         foregroundColor: Colors.white,//Colors.black,
         backgroundColor: const Color.fromARGB(255, 0, 14, 27),
-        //title: Text('Baika Seguro'),
-        //centerTitle: true,
       );
   }
 

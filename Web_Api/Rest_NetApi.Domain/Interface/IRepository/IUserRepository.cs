@@ -18,6 +18,7 @@ namespace Rest_NetApi.Domain.Interface.IRepository
         UserDto UserLogin(string email, string password);
 
         UserDto FindByUserName(string name);
+        UserDto FindByEmail(string email);
 
     }
 }

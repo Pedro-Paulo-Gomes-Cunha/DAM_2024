@@ -3,6 +3,8 @@ import 'package:bikeshared/models/station.dart';
 import 'package:bikeshared/services/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/solicitation_service.dart';
+
 class StationDetails extends StatefulWidget {
   final Station station;
   const StationDetails({super.key, required this.station});
@@ -95,7 +97,7 @@ class _StationDetailsState extends State<StationDetails> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,  
               children: [
-                StationController.globalHasBikeShared == true /*&& stationSelected == widget.station.stationId*/?
+                SolicitationService.globalHasBikeShared == true /*&& stationSelected == widget.station.stationId*/?
                 const Text(
                   "Devolver", 
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
@@ -110,10 +112,10 @@ class _StationDetailsState extends State<StationDetails> {
               setState(() {
                 isLoading = true;
               });
-              String? email = SharedPreferencesManager.sharedPreferences.getString("email");
+              String? UserId = SharedPreferencesManager.sharedPreferences.getString("UserId");
               
-              if(StationController.globalHasBikeShared == false){
-                int status = await StationController.solicitation(widget.station.stationId, email);
+              if(SolicitationService.globalHasBikeShared == false){
+                int status = await SolicitationService.solicitation(widget.station.stationId, UserId);
 
                 if(status == 200){
                   await StationController.listStations();
@@ -139,7 +141,7 @@ class _StationDetailsState extends State<StationDetails> {
                 }
 
               }else{
-                  bool? status = await StationController.returnedBike(widget.station.stationId, email);
+                  bool? status = await SolicitationService.returnedBike(widget.station.stationId, UserId);
                   if(status == true){
                     setState(() {
                       widget.station.availableBikeShared++;

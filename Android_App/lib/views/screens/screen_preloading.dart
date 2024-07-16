@@ -17,8 +17,8 @@ class _ScreenPreloadingState extends State<ScreenPreloading> {
   void initState() {
     
     super.initState();
-    getLocation = StationController.getLocation();
-    listStations = StationController.listStations();
+    getLocation = StationController.getLocation();   // carregar a minha localização atual
+    listStations = StationController.listStations();  //Carregar as estações disponíveis
   }
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _ScreenPreloadingState extends State<ScreenPreloading> {
             if (snapshot.hasData) {
               return const ScreenHome();
             }
-//return ScreenHome();
+          //return ScreenHome();
             return const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,13 +50,7 @@ class _ScreenPreloadingState extends State<ScreenPreloading> {
                   padding: EdgeInsets.all(15.0),
                   child: Image(image: AssetImage('images/bike2.png')),
                 ),
-                SizedBox(height: 30,),                    
-                /*SizedBox(
-                  width: size.width,
-                  //height: size.height,
-                  child: const Center(child: CircularProgressIndicator())
-                ),*/
-                
+                SizedBox(height: 30,),
             ]);
           }),
         ),

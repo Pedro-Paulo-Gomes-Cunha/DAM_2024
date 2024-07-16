@@ -82,6 +82,13 @@ namespace Rest_NetApi.Data.Repositories
             return new UserDB(user.Id, user.Name, user.Email, user.Password, user.Profile, user.credit);
         }
 
-     
+        public UserDto FindByEmail(string email)
+        {
+            var result = Db.Users.FirstOrDefault(a => a.Email.Equals(email));
+
+            if (result == null) return null;
+
+            return TransformToDto(result);
+        }
     }
 }

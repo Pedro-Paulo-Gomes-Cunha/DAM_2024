@@ -1,11 +1,13 @@
+import '../Helpers/Parse.dart';
 class Solicitation{
-  int id;
+  String id;
   String station;
   String address;
   double lat;
   double long;
   bool hasBikeShared;
   String stationReturn;
+  String userid;
 
   Solicitation({
     required this.id,
@@ -15,6 +17,26 @@ class Solicitation{
     required this.long,
     required this.hasBikeShared,
     required this.stationReturn,
+    required this.userid
   });
+  /*Solicitation(
+    this.id,
+    this.station,
+    this.address,
+    this.lat,
+    this.long,
+    this.hasBikeShared,
+    this.stationReturn,
+    this.userid
+  );*/
 
+  Solicitation.fromJson(Map<String, dynamic> json)
+      : id= json['id'] as String,
+        station = json['station'] as String,
+        address = json['address'] as String,
+        lat =  Helping.checkDouble(json['latitutde']),// as double,
+        long = Helping.checkDouble(json['longitude']),// as double, //Helping.checkDouble(json['credit']),
+        hasBikeShared = json['hasBikeShared'] as bool,
+        stationReturn = json['stationReturn'] as String,
+        userid= json['userId'] as String;
 }

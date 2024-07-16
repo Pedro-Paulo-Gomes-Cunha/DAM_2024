@@ -10,13 +10,13 @@ using Rest_NetApi.Domain.Service;
 
 namespace Rest_NetApi.Api.Controllers
 {
-    [Route("/stations")]
+    [Route("/solicitations")]
     [ApiController]
-    public class StationController : ControllerBase
+    public class SolicitationController : ControllerBase
     {
-        private readonly IStationService _service;
+        private readonly ISolicitationService _service;
 
-        public StationController(IStationService Service)
+        public SolicitationController(ISolicitationService Service)
         {
             _service = Service;
         }
@@ -35,11 +35,13 @@ namespace Rest_NetApi.Api.Controllers
             {
                 //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
             }
+
         }
 
         [HttpPost()]
-        public IActionResult Add([FromBody] StationView dado)
+        public IActionResult Add([FromBody] SolicitationView dado)
         {
             try
             {
@@ -49,11 +51,14 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
+                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
             }
+          
         }
         [HttpPut()]
-        public IActionResult Put(StationView dado)
+        public IActionResult Put(SolicitationView dado)
         {
             try
             {
@@ -63,8 +68,11 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
+                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
             }
+
         }
 
         [HttpDelete("{id}")]
@@ -78,8 +86,11 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
+                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
             }
+
         }
 
         [HttpGet("{id}")]
@@ -98,21 +109,22 @@ namespace Rest_NetApi.Api.Controllers
             }
             catch (Exception e)
             {
+                //add logs
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
             }
         }
-
         [HttpGet()]
-        [Route("/stations/byname")]
+        [Route("/solicitations/last/byuserid")]
 
-        public IActionResult GetByName(string name)
+        public IActionResult GetByUserId(Guid id)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                var result = _service.FindByStationName(name).Select(ViewParser.Parse);
+                var result = ViewParser.Parse(_service.FindLastSolicitationByUserId(id));
 
                 if (result == null) return NotFound();
 
@@ -124,34 +136,8 @@ namespace Rest_NetApi.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
 
             }
+
+
         }
-
-
-            //}
-            //[HttpGet()]
-            //[Route("/denuncy/byuserid")]
-
-            //public IActionResult GetByUserId(Guid id)
-            //{
-            //    try
-            //    {
-            //        if (!ModelState.IsValid)
-            //            return BadRequest();
-
-            //        var result = _service.FindByUserId(id).Select(ViewParser.Parse);
-
-            //        if (result == null) return NotFound();
-
-            //        return Ok(result);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        //add logs
-            //        return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-
-            //    }
-
-
-            //}
-        }
+    }
 }
