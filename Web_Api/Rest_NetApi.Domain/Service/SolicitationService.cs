@@ -24,17 +24,47 @@ namespace Rest_NetApi.Domain.Service
 
         public IEnumerable<SolicitationDto> FindAll()
         {
-            return this._repositoryWrapper.SolicitationRepository.FindAll();
+            var list = this._repositoryWrapper.SolicitationRepository.FindAll().ToList();
+            for (int i = 0; i < list.Count; i++)
+            {
+                var name = this._repositoryWrapper.StationRepositoy.FindById(list[i].stationReturn)?.name;
+                list[i].Source = this._repositoryWrapper.StationRepositoy.FindById(list[i].station).name;
+                list[i].Destiny =  name == null ? string.Empty:name;
+            }
+            return list.AsEnumerable();
         }
 
         public SolicitationDto FindById(Guid id)
         {
-            return this._repositoryWrapper.SolicitationRepository.FindById(id);
+            var SolicitationCopy = this._repositoryWrapper.SolicitationRepository.FindById(id);
+
+            var name = this._repositoryWrapper.StationRepositoy.FindById(SolicitationCopy.stationReturn)?.name;
+            SolicitationCopy.Source = this._repositoryWrapper.StationRepositoy.FindById(SolicitationCopy.station).name;
+            SolicitationCopy.Destiny  = name == null ? string.Empty : name;
+
+            return SolicitationCopy;
+        }
+
+        public IEnumerable<SolicitationDto> FindByUserId(Guid id)
+        {
+            var list = this._repositoryWrapper.SolicitationRepository.FindByUserId(id).ToList();
+            for (int i = 0; i < list.Count; i++)
+            {
+                var name = this._repositoryWrapper.StationRepositoy.FindById(list[i].stationReturn)?.name;
+                list[i].Source = this._repositoryWrapper.StationRepositoy.FindById(list[i].station).name;
+                list[i].Destiny = name == null ? string.Empty : name;
+            }
+            return list.AsEnumerable();
         }
 
         public SolicitationDto FindLastSolicitationByUserId(Guid id)
         {
-           return this._repositoryWrapper.SolicitationRepository.FindLastSolicitationByUserId(id);
+            var SolicitationCopy = this._repositoryWrapper.SolicitationRepository.FindLastSolicitationByUserId(id);
+            var name = this._repositoryWrapper.StationRepositoy.FindById(SolicitationCopy.stationReturn)?.name;
+            SolicitationCopy.Source = this._repositoryWrapper.StationRepositoy.FindById(SolicitationCopy.station).name;
+            SolicitationCopy.Destiny = name == null ? string.Empty : name;
+
+            return SolicitationCopy;
         }
 
         public void Remove(Guid id)

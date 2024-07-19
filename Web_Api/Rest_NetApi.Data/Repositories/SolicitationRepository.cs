@@ -29,9 +29,15 @@ namespace Rest_NetApi.Data.Repositories
             return dbObject.ToDto();
         }
 
+        public IEnumerable<SolicitationDto> FindByUserId(Guid id)
+        {
+            var result = Db.Solicitations.Where(a => a.UserId == id).AsEnumerable().Select(x => x.ToDto());
+            return result;
+        }
+
         public SolicitationDto FindLastSolicitationByUserId(Guid id)
         {  var resultSolicitation=new SolicitationDto();
-           var result = Db.Solicitations.LastOrDefault(a => a.UserId==id);
+           var result = Db.Solicitations.Where(a => a.UserId==id).AsEnumerable().Last();
             if (result != null) resultSolicitation = result.ToDto();
             return resultSolicitation;
         }
@@ -57,7 +63,8 @@ namespace Rest_NetApi.Data.Repositories
         {
             var dbObject = obj.ToDB();
 
-            Update(dbObject);
+            Db.Solicitations.Update(dbObject);
+            Db.SaveChanges();
         }
     }
 }

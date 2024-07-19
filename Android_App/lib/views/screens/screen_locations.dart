@@ -87,7 +87,8 @@ class _ScreenLocationsState extends State<ScreenLocations> {
             ));
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 0, 14, 27),
+      foregroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 0, 14, 27),
         title: const Text('Localizar Estação'),
         //centerTitle: true,
       );
@@ -146,8 +147,8 @@ class _ScreenLocationsState extends State<ScreenLocations> {
                                   color: Colors.red,
                                     Icons.location_pin,
                               ),
-                              title: Text(station.address,style: const TextStyle(color: Colors.black54),),
-                              subtitle: Text(station.stationId,style: const TextStyle(color: Colors.black54,fontSize: 11),),
+                              title: Text(station.name,style: const TextStyle(color: Colors.black54),),
+                              subtitle: Text(station.address,style: const TextStyle(color: Colors.black54,fontSize: 11),),
                               trailing: Text(
                                 "${calculateDistance(
                                   StationController.lat, 

@@ -1,5 +1,4 @@
 
-import 'package:bikeshared/controllers/UserController.dart';
 import 'package:bikeshared/views/components/auth_input.dart';
 import 'package:bikeshared/views/components/auth_input_email.dart';
 import 'package:bikeshared/views/components/auth_input_password.dart';

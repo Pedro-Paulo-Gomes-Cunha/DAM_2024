@@ -117,7 +117,7 @@ namespace Rest_NetApi.Api.Controllers
         [HttpGet()]
         [Route("/solicitations/last/byuserid")]
 
-        public IActionResult GetByUserId(Guid id)
+        public IActionResult GetLastSolicitionByUserId(Guid id)
         {
             try
             {
@@ -125,6 +125,31 @@ namespace Rest_NetApi.Api.Controllers
                     return BadRequest();
 
                 var result = ViewParser.Parse(_service.FindLastSolicitationByUserId(id));
+
+                if (result == null) return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                //add logs
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+
+            }
+
+
+        }
+        [HttpGet()]
+        [Route("/solicitations/byuserid")]
+
+        public IActionResult GetByUserId(Guid id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                var result = _service.FindByUserId(id).Select(ViewParser.Parse);
 
                 if (result == null) return NotFound();
 

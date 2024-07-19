@@ -37,7 +37,8 @@ class _ScreenAboutState extends State<ScreenAbout> {
             ));
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 0, 59, 114),
+      foregroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 0, 14, 27),
         title: const Text('Sobre BikeShared'),
         //centerTitle: true,
       );
@@ -61,7 +62,7 @@ class _ScreenAboutState extends State<ScreenAbout> {
                 SizedBox(
                   width: size.width*0.8,
                   height: 40.0,
-                  child: const Text("Bike Shared Team")
+                  child: const Text("Bike Shared Team\n\n1. Elizabeth Mateus (Documentation)\n2. Leopoldo Francisco (Project Maneger)\n3. Jone Lengo (Designer) \n4. Pedro Cunha (Developer)")
                 ),
               ])      
             ),

@@ -37,9 +37,9 @@ enum DrawerSelectOptions{
 class _ScreenHomeState extends State<ScreenHome> {
   var currentPage = DrawerSelectOptions.home;
 
-  //variavel que vai controlar o mapa
+  //variavel controlador do mapa
   late GoogleMapController _mapsController;
-  String googleKey = "AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938";//AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw
+  String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
   
   double lat = 0.0;
   double long = 0.0;
@@ -80,18 +80,13 @@ class _ScreenHomeState extends State<ScreenHome> {
 
 
   void setPolylines() async{
-
-    
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleKey, 
       PointLatLng(sourceLocation.latitude, sourceLocation.longitude), 
       PointLatLng(destination.latitude, destination.longitude),
       
     );
-      
-      /*print(result.status);
-      print(result.points);
-      print(result.errorMessage);*/
+
       if (result.points.isNotEmpty) {
         for (var point in result.points) {
           polylineCoordinates.add(
@@ -108,15 +103,12 @@ class _ScreenHomeState extends State<ScreenHome> {
             points: polylineCoordinates)
           );
         });
-        
-      
       }
   }
 
   Future<Position>_positionCurrent() async{
     bool serviceEnabled;
     LocationPermission permission;
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return Future.error('Serviço de localização está desativado');
@@ -156,17 +148,16 @@ class _ScreenHomeState extends State<ScreenHome> {
   }
 
 
-  void loadingStation () {
-    var stations = StationRepository.list;
+  void loadingStation() {
+    var stations =  StationRepository.list;
+    print("->"+StationRepository.list.toString());
+    print("->"+StationRepository.list.length.toString());
     for (var station in stations) {
       markers.add(
         Marker(
           markerId: MarkerId(station.stationId),
           position: LatLng(station.lat,station.long),
-          /*icon: await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(),
-            'images/bike.png'
-          ),//Icon(Icons.pedal_bike_sharp),*/
+
           onTap: ()=>{
             showModalBottomSheet(
               context: context, builder: (context)=> StationDetails(station: station),
@@ -206,25 +197,15 @@ class _ScreenHomeState extends State<ScreenHome> {
   Widget build(BuildContext context) {
     
 
-
-    
-    //print(StationRepository.list[0].name);
-    //print(markers);
     return 
     Scaffold(
       //key: appKey,
       resizeToAvoidBottomInset: false,
       //backgroundColor: const Color(0xff13a962),
       appBar: buildAppBar(),
-      body: /*ChangeNotifierProvider<StationController>(
-        
-        create: (context)=>StationController(),*/
+      body:
         Builder(builder: (context){
-          
-          /*final local = context.watch<StationController>();*/
-          /*print(lat);
-          print(long);*/
-          /*print(polylineCoordinates);*/
+
           return GoogleMap(
             initialCameraPosition: CameraPosition(
               target: /*sourceLocation*/LatLng(lat, long),
@@ -236,8 +217,6 @@ class _ScreenHomeState extends State<ScreenHome> {
             myLocationButtonEnabled: true,
             compassEnabled: true,
             tiltGesturesEnabled: true,
-            //indoorViewEnabled: true,
-            //onMapCreated: local.onMapCreated,
             markers: markers,
             onMapCreated: (GoogleMapController gController) async{
               _mapsController = gController;

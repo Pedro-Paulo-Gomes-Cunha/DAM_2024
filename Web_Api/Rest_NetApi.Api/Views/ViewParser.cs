@@ -16,7 +16,7 @@ namespace Rest_NetApi.Api.Views
 
 		public static SolicitationView Parse(SolicitationDto solicitaction)
 		{
-			return new SolicitationView(solicitaction.Id, solicitaction.station.ToString(), solicitaction.address, solicitaction.latitutde, solicitaction.longitude, solicitaction.hasBikeShared, solicitaction.stationReturn.ToString(), solicitaction.UserId.ToString());
+			return new SolicitationView(solicitaction.Id, solicitaction.station.ToString(), solicitaction.address, solicitaction.latitutde, solicitaction.longitude, solicitaction.hasBikeShared, solicitaction.stationReturn.ToString(), solicitaction.UserId.ToString(), solicitaction.Source, solicitaction.Destiny);
         }
 
 		public static StationView Parse(StationDto station)

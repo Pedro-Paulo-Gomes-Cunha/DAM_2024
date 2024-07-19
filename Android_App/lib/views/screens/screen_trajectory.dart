@@ -27,7 +27,7 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
 
   //variavel que vai controlar o mapa
   late GoogleMapController _mapsController;
-  String googleKey = "AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938";//AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw
+  String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";//"AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938";//
   
   double lat = 0.0;
   

@@ -8,6 +8,8 @@ class Solicitation{
   bool hasBikeShared;
   String stationReturn;
   String userid;
+  String source;
+  String destiny;
 
   Solicitation({
     required this.id,
@@ -17,7 +19,9 @@ class Solicitation{
     required this.long,
     required this.hasBikeShared,
     required this.stationReturn,
-    required this.userid
+    required this.userid,
+    required this.source,
+    required this.destiny
   });
   /*Solicitation(
     this.id,
@@ -38,5 +42,7 @@ class Solicitation{
         long = Helping.checkDouble(json['longitude']),// as double, //Helping.checkDouble(json['credit']),
         hasBikeShared = json['hasBikeShared'] as bool,
         stationReturn = json['stationReturn'] as String,
+        source = json['source'] as String,
+        destiny = json['destiny'] as String,
         userid= json['userId'] as String;
 }

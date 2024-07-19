@@ -51,7 +51,8 @@ namespace Rest_NetApi.Data.Repositories
         {
             var dbObject = TransformToDBO(obj);
 
-            Update(dbObject);
+           Db.Users.Update(dbObject);
+           Db.SaveChanges();
         }
 
         public UserDto UserLogin(string email, string password)

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:bikeshared/models/user.dart';
 import 'package:bikeshared/services/shared_preferences_manager.dart';
+import 'package:bikeshared/services/solicitation_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -23,9 +24,8 @@ class UserService {
       await sharedPreference.setString('name', User_.name);
       await sharedPreference.setString('email', User_.email);
       await sharedPreference.setString('password', User_.password);
-      //await sharedPreference.setBool('hasBikeShared', bool.fromEnvironment(hasBikeShared.first.text));
+      await sharedPreference.setBool('hasBikeShared', await SolicitationService.HasActiveBike(User_.id));
       await sharedPreference.setDouble('credit', User_.credit);
-
       await sharedPreference.setString('Profile', User_.Profile);
     } else {
 
@@ -97,5 +97,9 @@ class UserService {
     } catch (e) {
       //  throw SocketException(e.toString());
     }
+  }
+
+  static Future<bool> HasCredit() async {
+    return true;
   }
 }

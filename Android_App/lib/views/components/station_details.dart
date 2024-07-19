@@ -38,7 +38,7 @@ class _StationDetailsState extends State<StationDetails> {
           SizedBox(
             width: size.width,
             child: Text(
-              widget.station.stationId,
+              widget.station.name,
               style: const TextStyle(
                 fontSize: 17,
                 color: Color.fromARGB(221, 78, 78, 78)
@@ -111,12 +111,15 @@ class _StationDetailsState extends State<StationDetails> {
             onPressed: () async{
               setState(() {
                 isLoading = true;
-              });
-              String? UserId = SharedPreferencesManager.sharedPreferences.getString("UserId");
-              
-              if(SolicitationService.globalHasBikeShared == false){
-                int status = await SolicitationService.solicitation(widget.station.stationId, UserId);
 
+              });
+
+              String? UserId = SharedPreferencesManager.sharedPreferences.getString("UserId");
+
+              if(SolicitationService.globalHasBikeShared == false){
+
+                int status = await SolicitationService.solicitation(widget.station.stationId, UserId);
+                ;
                 if(status == 200){
                   await StationController.listStations();
                   setState(() {

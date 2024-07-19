@@ -15,5 +15,6 @@ namespace Rest_NetApi.Domain.Interface.IRepository
         void UpdateSolicitation(SolicitationDto obj);
         void RemoveSolicitation(Guid id);
         SolicitationDto FindLastSolicitationByUserId(Guid id);
+        IEnumerable<SolicitationDto> FindByUserId(Guid id);
     }
 }

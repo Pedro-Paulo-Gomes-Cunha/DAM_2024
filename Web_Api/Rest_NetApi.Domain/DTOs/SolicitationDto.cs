@@ -19,6 +19,8 @@ namespace Rest_NetApi.Domain.DTOs
         public bool hasBikeShared { get; set; }
         public Guid stationReturn { get; set; }
         public Guid UserId { get; set; }
+        public string Source { get; set; }
+        public string Destiny { get; set; }
 
 
         public SolicitationDto() { }

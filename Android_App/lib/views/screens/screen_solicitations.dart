@@ -9,6 +9,8 @@ import 'package:bikeshared/views/screens/screen_trajectory.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../services/solicitation_service.dart';
+
 
 class ScreenSolicitations extends StatefulWidget {
   const ScreenSolicitations({super.key});
@@ -23,7 +25,8 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
   void initState() {
 
     super.initState();
-    listSolicitations = getSolicitations();
+    String? userId= SharedPreferencesManager.sharedPreferences.getString("UserId");
+    listSolicitations =  SolicitationService.SolicitionListbyUser(userId!);
   }
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,8 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
             ));
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 0, 14, 27),
+      foregroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 0, 14, 27),
         title: const Text('Minhas Solicitações'),
         //centerTitle: true,
       );
@@ -89,7 +93,7 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
                             //leading: Icon(Icons.arrow_downward),
                             selected: (solicitation.id==1),
                             selectedTileColor:Colors.blueAccent,               
-                            title: Text(solicitation.station,style: const TextStyle(color: Colors.black54),),
+                            title: Text(solicitation.source,style: const TextStyle(color: Colors.black54),),
                             trailing: Icon(
                               color: (solicitation.hasBikeShared==true && solicitation.station==station)?Colors.blueAccent:Colors.green,
                                   (solicitation.hasBikeShared==true && solicitation.station==station && list.length == index/* && */)?Icons.timelapse:Icons.assignment_turned_in_rounded
@@ -156,7 +160,7 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
           SizedBox(
             width: size.width,
             child: Text(
-              solicitation.station,
+              solicitation.source,
               style: const TextStyle(
                 fontSize: 17,
                 color: Color.fromARGB(221, 163, 163, 163)
@@ -174,7 +178,7 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
                   color: Color.fromARGB(255, 192, 14, 1),
                 ),
                 Text(
-                  solicitation.station,
+                  solicitation.address,
                   style: const TextStyle(fontSize: 15),
                   textAlign: TextAlign.left,
                 )
@@ -199,7 +203,7 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
               SizedBox(
                 width: size.width,
                 child: Text(
-                  solicitation.stationReturn,
+                  solicitation.destiny,
                   style: const TextStyle(
                     fontSize: 17,
                     color: Color.fromARGB(221, 139, 139, 139)
@@ -210,14 +214,14 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
               const SizedBox(height: 3,),         
               SizedBox(
                 width: size.width,
-                child: const Row(
+                child:  Row(
                   children: [
                     Icon(
                       Icons.location_pin,
                       color: Color.fromARGB(255, 192, 14, 1),
                     ),
                     Text(
-                      "Departamento da Computação",
+                      solicitation.address,
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.left,
                     )
@@ -268,9 +272,6 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
     );
   }
 
-  Future<List<Solicitation>> getSolicitations() async{
-    return SolicitationRepository.list;
-  }
 
   showModal(message, context){
     return showModalBottomSheet(

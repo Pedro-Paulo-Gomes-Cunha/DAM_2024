@@ -59,7 +59,8 @@ namespace Rest_NetApi.Data.Repositories
         {
             var dbObject = obj.ToDB();
 
-            Update(dbObject);
+            Db.Stations.Update(dbObject);
+            Db.SaveChanges();
         }
     }
 }

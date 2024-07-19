@@ -13,10 +13,12 @@ namespace Rest_NetApi.Api.Views
         public bool hasBikeShared { get; set; }
         public string stationReturn { get; set; }
         public string UserId { get; set; }
+        public string Source { get; set; }
+        public string Destiny { get; set; }
 
 
         public SolicitationView() { }
-        public SolicitationView(Guid id, string station, string address, double latitutde, double longitude, bool hasBikeShared, string stationReturn, string userId)
+        public SolicitationView(Guid id, string station, string address, double latitutde, double longitude, bool hasBikeShared, string stationReturn, string userId, string source, string destiny)
         {
             Id = id;
             this.station = station;
@@ -26,6 +28,8 @@ namespace Rest_NetApi.Api.Views
             this.hasBikeShared = hasBikeShared;
             this.stationReturn = stationReturn;
             UserId = userId;    
+            Source = source;
+            Destiny = destiny;
         }
 
         public SolicitationDto ToDto()

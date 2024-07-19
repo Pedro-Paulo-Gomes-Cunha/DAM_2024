@@ -22,6 +22,29 @@ class SolicitationService {
   String error = '';
 
 
+  static Future<List<Solicitation>> SolicitionListbyUser(String userid) async{
+    List<Solicitation> list =[];
+
+    String stringconection="${Env.url}/solicitations/byuserid?id=$userid";
+    var url= Uri.parse(stringconection);
+
+    var response = await http.get(url, headers: {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    });
+    if (response.statusCode == 200) {
+      final Map = jsonDecode(response.body);
+
+      for (var item in Map) {
+        list.add(Solicitation.fromJson(item));
+      }}
+
+    SolicitationRepository.list=list;
+    return list;
+  }
+
+
   static Future<int> solicitation(stationId,userid) async{
     //SharedPreferences sharedPreference = await SharedPreferences.getInstance();
     try {
@@ -39,23 +62,26 @@ class SolicitationService {
             'Content-Type': 'application/json',
             'Accept': '*/*',
           },
-          body: jsonEncode(<String, String>{
-            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          body: jsonEncode(<String, dynamic>{
+            "id": "00000000-0000-0000-0000-000000000000",
             "station" :stationId,
             "address": data.address,
             "latitutde": data.lat.toString(),
             "longitude":data.long.toString(),
-            "hasBikeShared" :"true",
-            "stationReturn":"3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "hasBikeShared" :true,
+            "stationReturn":"00000000-0000-0000-0000-000000000000",
             "userId":userid,
+            "source":"",
+            "destiny":"",
           }));
 
       final body = response.body;
       final statusCode = response.statusCode;
+      //print(body.toString());
       if (statusCode == 200) {
-        print("ok");
         await SharedPreferencesManager.sharedPreferences.setString('stationSelected',stationId);
         await SharedPreferencesManager.sharedPreferences.setBool('hasBikeShared',true);
+        await SharedPreferencesManager.sharedPreferences.setDouble('credit', TrocarPontos(false));
         globalHasBikeShared = true;
 
         var result = await search(userid);
@@ -64,11 +90,9 @@ class SolicitationService {
               station.stationId.contains(stationId)).first;
           SolicitationRepository.list.add(result);
         }
-        TrocarPontos(false);
         return statusCode;}else{ return statusCode;}
 
     } catch (e) {
-      print("Exception");
       return 500;
     }
   }
@@ -87,32 +111,32 @@ class SolicitationService {
             'Content-Type': 'application/json',
             'Accept': '*/*',
           },
-          body: jsonEncode(<String, String>{
+          body: jsonEncode(<String, dynamic>{
             "id": result.id,
             "station" :result.station,
             "address":result.address,
             "latitutde": result.lat.toString(),
             "longitude":result.long.toString(),
-            "hasBikeShared" :"false",
+            "hasBikeShared" :false,
             "stationReturn":stationId,
             "userId":userid,
+            "source":"",
+            "destiny":"",
           }));
 
       if(response.statusCode == 200){
-        print("ok");
+
         final body = response.body;
         SolicitationRepository.list.last.stationReturn = stationId;
         await SharedPreferencesManager.sharedPreferences.setString('stationSelected',"");
         await SharedPreferencesManager.sharedPreferences.setBool('hasBikeShared',false);
+        await SharedPreferencesManager.sharedPreferences.setDouble('credit', TrocarPontos(true));
         globalHasBikeShared = false;
-        TrocarPontos(true);
         return true;
       }else {
-        print("error");
         return false;
       }
     }catch (e){
-      print("exception");
       return false;
     }
   }
@@ -128,23 +152,34 @@ class SolicitationService {
         'Content-Type': 'application/json',
         'Accept': '*/*'
       });
+
       final SlMap = jsonDecode(response.body);
        Solicitation_=Solicitation.fromJson(SlMap); //
+      if(Solicitation_!=null){
+        globalHasBikeShared = Solicitation_.hasBikeShared;
+      }else{
+        globalHasBikeShared =false;
+      }
     } catch (e) {
+      globalHasBikeShared =false;
       throw SocketException(e.toString());
     }
     return Solicitation_;
   }
 
-  static Future<void> TrocarPontos(bool bonus) async {
-    double? value = SharedPreferencesManager.sharedPreferences.getDouble("credit");
+  static double TrocarPontos(bool bonus) {
+    double? value =SharedPreferencesManager.sharedPreferences.getDouble("credit");
+    SharedPreferencesManager.sharedPreferences.remove("credit");
     if(bonus){
       value=(value! + 0.5)!;
     }else{
       value=(value! - 1)!;
     }
-    SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
-    await sharedPreference.setDouble('credit', value);
+    return value;
   }
 
+  static Future<bool> HasActiveBike(String userId) async {
+     await search(userId);
+    return globalHasBikeShared;
+  }
 }

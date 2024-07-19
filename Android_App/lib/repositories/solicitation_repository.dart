@@ -3,7 +3,7 @@
 import 'package:bikeshared/models/solicitation.dart';
 
 class SolicitationRepository{
-    static final List<Solicitation> list = [];
+    static late List<Solicitation> list = [];
     static final List<Solicitation> list1 = [
     Solicitation(
       id: "1",
@@ -13,7 +13,9 @@ class SolicitationRepository{
       long: 13.284566,
       hasBikeShared: false,
       stationReturn: "",
-        userid: ""
+        userid: "",
+        source:"",
+        destiny:""
     ),
     Solicitation(
       id: "2",
@@ -23,7 +25,9 @@ class SolicitationRepository{
       long: 13.284544,
       hasBikeShared: false,
       stationReturn: "",
-        userid: ""
+        userid: "",
+        source:"",
+        destiny:""
     ),
     Solicitation(
       id: "3",
@@ -33,7 +37,9 @@ class SolicitationRepository{
       long: 13.284556,
       hasBikeShared: false,
       stationReturn: "",
-        userid: ""
+        userid: "",
+        source:"",
+        destiny:""
     ) 
   ];
 }

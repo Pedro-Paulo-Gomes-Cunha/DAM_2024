@@ -84,11 +84,7 @@ namespace Rest_NetApi.Domain.Service
             {
                 throw new Exception("Campo Senha é Obrigatório");
             }
-            var response = _repositoryWrapper.UserRepository.FindByEmail(userEntiy.Email);
-            if (response != null && response.Id!= userEntiy.Id)
-            {
-                throw new Exception("Já existe um usuário com este email!");
-            }
+
             _repositoryWrapper.UserRepository.UpdateUser(obj);
         }
 

@@ -2,7 +2,7 @@
 import 'package:bikeshared/models/station.dart';
 
 class StationRepository {
-    static late List<Station> list = [];
+    static List<Station> list = [];
     static final List<Station> list1 =[];
     static final List<Station> list2 = [
     Station(
