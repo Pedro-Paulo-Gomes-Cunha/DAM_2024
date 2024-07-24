@@ -27,7 +27,7 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
 
   //variavel que vai controlar o mapa
   late GoogleMapController _mapsController;
-  String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";//"AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938";//
+  String googleKey = "AIzaSyBwXK0RP9bdcdz63bwo6y2MBO6FX6J0EcQ";//"AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938";//
   
   double lat = 0.0;
   
@@ -274,8 +274,6 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
             ) 
           ),
           const SizedBox(height: 25,),
-          
-          
         ],
       ),
     );

@@ -20,11 +20,12 @@ class UserService {
       var User_=User.fromJson(UserMap); //
       SharedPreferences sharedPreference = SharedPreferencesManager.sharedPreferences;
       sharedPreference.clear();
+      await SolicitationService.search(User_.id);
       await sharedPreference.setString('UserId', User_.id);
       await sharedPreference.setString('name', User_.name);
       await sharedPreference.setString('email', User_.email);
       await sharedPreference.setString('password', User_.password);
-      await sharedPreference.setBool('hasBikeShared', await SolicitationService.HasActiveBike(User_.id));
+      await sharedPreference.setBool('hasBikeShared', SolicitationService.globalHasBikeShared);
       await sharedPreference.setDouble('credit', User_.credit);
       await sharedPreference.setString('Profile', User_.Profile);
     } else {

@@ -85,10 +85,11 @@ class SolicitationService {
         globalHasBikeShared = true;
 
         var result = await search(userid);
-        if(result==null || result.id==""){
+
+        if(result!=null){
           Station data = StationRepository.list.where((station) =>
               station.stationId.contains(stationId)).first;
-          SolicitationRepository.list.add(result);
+          SolicitationRepository.list.add(result!);
         }
         return statusCode;}else{ return statusCode;}
 
@@ -126,8 +127,10 @@ class SolicitationService {
 
       if(response.statusCode == 200){
 
-        final body = response.body;
-        SolicitationRepository.list.last.stationReturn = stationId;
+        //final body = response.body;
+        if(SolicitationRepository.list.isNotEmpty){
+          SolicitationRepository.list.last.stationReturn = stationId.toString();
+        }
         await SharedPreferencesManager.sharedPreferences.setString('stationSelected',"");
         await SharedPreferencesManager.sharedPreferences.setBool('hasBikeShared',false);
         await SharedPreferencesManager.sharedPreferences.setDouble('credit', TrocarPontos(true));
@@ -141,7 +144,7 @@ class SolicitationService {
     }
   }
 
-  static Future<Solicitation> search(String userid) async {
+  static Future<Solicitation?> search(String userid) async {
     Solicitation Solicitation_;
     try {
       String stringconection="${Env.url}/solicitations/last/byuserid?id=$userid";
@@ -153,8 +156,14 @@ class SolicitationService {
         'Accept': '*/*'
       });
 
+      if(response.statusCode!=200) {
+        globalHasBikeShared =false;
+        return null;
+      }
+
       final SlMap = jsonDecode(response.body);
-       Solicitation_=Solicitation.fromJson(SlMap); //
+       Solicitation_=Solicitation.fromJson(SlMap);
+
       if(Solicitation_!=null){
         globalHasBikeShared = Solicitation_.hasBikeShared;
       }else{
@@ -176,10 +185,5 @@ class SolicitationService {
       value=(value! - 1)!;
     }
     return value;
-  }
-
-  static Future<bool> HasActiveBike(String userId) async {
-     await search(userId);
-    return globalHasBikeShared;
   }
 }

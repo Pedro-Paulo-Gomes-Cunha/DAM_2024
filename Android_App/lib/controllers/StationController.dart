@@ -10,7 +10,7 @@ import 'package:bikeshared/services/shared_preferences_manager.dart';
 import 'package:bikeshared/views/components/station_details.dart';
 import 'package:bikeshared/views/screens/screen_home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+//import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -70,8 +70,8 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
   }
 
   setPolylines() async{
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+   // PolylinePoints polylinePoints = PolylinePoints();
+   /* PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       googleKey, 
       const PointLatLng(-8.8905235, 13.2274002), 
       const PointLatLng(-8.8649484, 13.2939577));
@@ -88,7 +88,7 @@ String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
           polylineId: const PolylineId('polyLine'),
           color: const Color(0xFF08A5CB),
           points: polylineCoordinates));
-      }
+      }*/
   }
 
   getPosition() async{

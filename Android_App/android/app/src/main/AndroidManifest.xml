@@ -21,13 +21,15 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
+
+
    <application
         android:label="bikeshared"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938"/><!--@string/ANDROID_MAPS_APIKEY / AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw-->
+               android:value="AIzaSyBwXK0RP9bdcdz63bwo6y2MBO6FX6J0EcQ"/><!--@string/ANDROID_MAPS_APIKEY / AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -39,7 +39,7 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   //variavel controlador do mapa
   late GoogleMapController _mapsController;
-  String googleKey = "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
+  String googleKey ="AIzaSyBwXK0RP9bdcdz63bwo6y2MBO6FX6J0EcQ";// "AIzaSyAyutQcGJEDgu1E8uLYIvXxsYjbfIeLdDw";
   
   double lat = 0.0;
   double long = 0.0;
@@ -225,9 +225,8 @@ class _ScreenHomeState extends State<ScreenHome> {
               loadingStation();
               
             },
-            //polylines: _polylines,
-            /*polylines: {
-
+            polylines: _polylines,
+           /* polylines: {
               Polyline(
                 polylineId: const PolylineId("kPolyline"),
                 points: polylineCoordinates,
