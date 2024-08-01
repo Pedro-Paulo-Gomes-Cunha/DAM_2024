@@ -3,7 +3,10 @@ import 'package:bikeshared/models/station.dart';
 import 'package:bikeshared/services/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 
+import '../../repositories/station_repository.dart';
 import '../../services/solicitation_service.dart';
+import '../screens/reportScreen.dart';
+import '../screens/screen_profile.dart';
 
 class StationDetails extends StatefulWidget {
   final Station station;
@@ -15,6 +18,8 @@ class StationDetails extends StatefulWidget {
 
 class _StationDetailsState extends State<StationDetails> {
   bool isLoading = false;
+  late Station station_copy= widget.station;
+  String? qrResult="";
   
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class _StationDetailsState extends State<StationDetails> {
           SizedBox(
             width: size.width,
             child: Text(
-              widget.station.name,
+              station_copy.name,
               style: const TextStyle(
                 fontSize: 17,
                 color: Color.fromARGB(221, 78, 78, 78)
@@ -57,7 +62,7 @@ class _StationDetailsState extends State<StationDetails> {
                   color: Color.fromARGB(255, 192, 14, 1),
                 ),
                 Text(
-                  widget.station.address,
+                  station_copy.address,
                   style: const TextStyle(fontSize: 15),
                   textAlign: TextAlign.left,
                 )
@@ -74,7 +79,7 @@ class _StationDetailsState extends State<StationDetails> {
               children: [
                 
                 Text(
-                  '${widget.station.availableBikeShared} Bicicletas / ${widget.station.capacity} Docas',
+                  '${station_copy.availableBikeShared} Bicicletas / ${station_copy.capacity} Docas',
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
                 )
@@ -109,56 +114,91 @@ class _StationDetailsState extends State<StationDetails> {
               ],
             ),
             onPressed: () async{
-              setState(() {
+              /*setState(() {
+                isLoading = true;
+              });*/
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => QRViewScanner(
+                onQRCodeScanned: (result) {
+                setState(() {
+                qrResult = result;
                 isLoading = true;
 
-              });
+                });},
+                ),
+                ));
+              /*Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QRViewScanner()),
+              );*/ station_copy= StationRepository.list.where((station) =>
+                  station.stationId.contains(qrResult!)).first;
 
-              String? UserId = SharedPreferencesManager.sharedPreferences.getString("UserId");
-
-              if(SolicitationService.globalHasBikeShared == false){
-
-                int status = await SolicitationService.solicitation(widget.station.stationId, UserId);
-                ;
-                if(status == 200){
-                  await StationController.listStations();
-                  setState(() {
-                    widget.station.availableBikeShared--;
-                  });
-                  showModal('Bina alugada com sucesso!', context);
-
-                }else if (status == 0) {
-                  showModal('O utilizador não existe', context);
-                }else if (status == 1) {
-                  showModal('O seu crédito é insuficiente', context);
-                }else if(status == 2){
-                  showModal('Utilizador já possui bina', context);
-                }else if(status == 3){
-                  showModal('Estação não encontrada', context);
-                }else if(status == 500){
-                  await StationController.listStations();
-                  setState(() {
-                      widget.station.availableBikeShared--;
-                    });
-                  showModal('Bina alugada com sucesso!', context);
-                }
-
-              }else{
-                  bool? status = await SolicitationService.returnedBike(widget.station.stationId, UserId);
-                  if(status == true){
-                    setState(() {
-                      widget.station.availableBikeShared++;
-                    });
-                    showModal('Bina devolvida com sucesso!', context);
-                  }else if (status == false) {
-                    showModal('Bina nao devolvida', context);
+              if(qrResult == "" || station_copy==null){
+                showModal('Estação não encontrada', context);}
+              else{
+                print("_>>>>1111");
+                String? UserId = SharedPreferencesManager.sharedPreferences.getString("UserId");
+                print("_>>>>2222");
+                if(SolicitationService.globalHasBikeShared == false){
+                  print("okk333");
+                  if(station_copy.availableBikeShared>0){
+                    print("_>>>>444");
+                    int status = await SolicitationService.solicitation(station_copy.stationId, UserId);
+                    print("_>555"+status.toString());
+                    if(status == 200){
+                      //await StationController.listStations();
+                      setState(() {
+                        station_copy.availableBikeShared--;
+                      });
+                      StationController.listStations();
+                      showModal('Bina alugada com sucesso!', context);
+                    }else if (status == 0) {
+                      showModal('O utilizador não existe', context);
+                    }else if (status == 1) {
+                      showModal('O seu crédito é insuficiente', context);
+                    }else if(status == 2){
+                      showModal('Utilizador já possui bina', context);
+                    }else if(status == 3){
+                      showModal('Estação não encontrada', context);
+                    }else if(status == 500){
+                    //  await StationController.listStations();
+                      setState(() {
+                        station_copy.availableBikeShared--;
+                      });
+                      showModal('Bina alugada com sucesso!', context);
+                    }
+                  }else{
+                    showModal('Sem Bina disponível!', context);
                   }
+
+                }else{
+
+                  if(station_copy.freeDocks>0){
+                    bool? status = await SolicitationService.returnedBike(station_copy.stationId, UserId);
+                    if(status == true){
+                      setState(() {
+                        station_copy.availableBikeShared++;
+                      });
+                      StationController.listStations();
+                      showModal('Bina devolvida com sucesso!', context);
+                    }else if (status == false) {
+                      showModal('Bina nao devolvida', context);
+                    }
+                  }else{
+                    showModal('Sem docas vazias!', context);
+                  }
+                }
               }
+
               Future.delayed(const Duration(seconds: 1),() {
                 setState(() {
                   isLoading = false;
                 });
-              });              
+              });
+
+
               /*SharedPreferences sharedPreference = await SharedPreferences.getInstance();
               await sharedPreference.clear();
               Navigator.of(context).pop();

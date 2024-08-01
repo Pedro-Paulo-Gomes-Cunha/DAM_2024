@@ -14,9 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ScreenTrajectory extends StatefulWidget {
-  final LatLng sourceLocation;// = LatLng(-8.8905235, 13.2274002);
-  final LatLng destination; //= LatLng(-8.8649484, 13.2939577);
-  const ScreenTrajectory({super.key, required this.sourceLocation, required this.destination});
+  final Station start_;// = LatLng(-8.8905235, 13.2274002);
+  final Station end_; //= LatLng(-8.8649484, 13.2939577);
+  const ScreenTrajectory({super.key, required this.start_, required this.end_});
 
   @override
   State<ScreenTrajectory> createState() => _ScreenTrajectoryState();
@@ -24,213 +24,80 @@ class ScreenTrajectory extends StatefulWidget {
 
 
 class _ScreenTrajectoryState extends State<ScreenTrajectory> {
+  GoogleMapController? mapController;
 
-  //variavel que vai controlar o mapa
-  late GoogleMapController _mapsController;
-  String googleKey = "AIzaSyBwXK0RP9bdcdz63bwo6y2MBO6FX6J0EcQ";//"AIzaSyDFbFxPiczX2GO_iVLeTbzoBGSsw6ma938";//
-  
-  double lat = 0.0;
-  
-  double long = 0.0;
-  String error = '';
+  // final LatLng _start = LatLng(-8.839987, 13.289437); // Ponto de partida
+  // final LatLng _end = LatLng(-8.8147, 13.2307); // Ponto de chegada
 
-  late LatLng sourceLocation2;// = LatLng(-8.8905235, 13.2274002);
-  late LatLng destination2;// = LatLng(-8.8649484, 13.2939577);
 
-  //variavel para marcacao de estacoes
-  Set<Marker> markers = <Marker>{};
-
-  //variaveis para marcação de coordenadas
-  final Set<Polyline> _polylines = <Polyline>{};
-  List<LatLng> polylineCoordinates = [];
-  late PolylinePoints polylinePoints;
-
-  double degreesToRadians(double degrees) {
-    return degrees * pi / 180;
+  void setPolylines() async {
+    // _start = LatLng(widget.sourceLocation.latitude, widget.sourceLocation.longitude); // Ponto de partida
+    // _end = LatLng(widget.destination.latitude, widget.destination.longitude); //
   }
 
-  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    double earthRadius = 6371; // em quilômetros
-
-    double dLat = degreesToRadians(lat2 - lat1);
-    double dLon = degreesToRadians(lon2 - lon1);
-
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(degreesToRadians(lat1)) * cos(degreesToRadians(lat2)) *
-        sin(dLon / 2) * sin(dLon / 2);
-
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    double distance = earthRadius * c;
-    return distance;
-  }
-
-  void setPolylines() async{
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleKey, 
-      PointLatLng(widget.sourceLocation.latitude, widget.sourceLocation.longitude), 
-      PointLatLng(widget.destination.latitude, widget.destination.longitude));
-      if (result.points.isNotEmpty) {
-        for (var point in result.points) {
-          polylineCoordinates.add(
-            LatLng(point.latitude, point.longitude)
-          );
-        }
-
-        setState(() {
-          _polylines.add(
-            Polyline(
-            width: 3,
-            polylineId: const PolylineId('polyLine'),
-            color: const Color.fromARGB(255, 9, 67, 82),
-            points: polylineCoordinates)
-          );
-        });
-        
-      
-      }
-  }
-
-  Future<Position>_positionCurrent() async{
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Serviço de localização está desativado');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Acesso a localização com permissão negado');     
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Acesso a localização com permissão negado para sempre, Você precisa autorizar o acesso.');     
-    }
-    return await Geolocator.getCurrentPosition();
-  }
-
-  void getPosition() async{
-    try {
-      Position position = await _positionCurrent();
-      lat = position.latitude;
-      long = position.longitude;
-      
-      _mapsController.animateCamera(CameraUpdate.newLatLng(LatLng(lat, long)));
-    } catch (e) {
-      error = e.toString();
-    }
-    
-  }
-
-  void loadingStation () {
-    final stations = StationRepository.list;
-    for (var station in stations) { 
-      markers.add(
-        Marker(
-          markerId: MarkerId(station.name),
-          position: LatLng(station.lat,station.long),
-          onTap: ()=>{
-            showModalBottomSheet(
-              context: context, builder: (context)=> modalSolicitation(context, station),
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              anchorPoint: const Offset(4, 5),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-            )
-          },
-        )
-      );
-    }
-  }
-
-  @override
-  void initState(){
-    
-    super.initState();
-
-    polylinePoints = PolylinePoints();
-    sourceLocation2 = widget.sourceLocation;
-    destination2 = widget.destination;
 
 
-    getPosition();
-    loadingStation();
-
-    calculateDistance(widget.sourceLocation.latitude, widget.sourceLocation.longitude,
-     widget.destination.latitude, widget.destination.longitude);
-  }
 
   @override
   Widget build(BuildContext context) {
-    
-
-    return 
-    Scaffold(
-      //key: appKey,
-      resizeToAvoidBottomInset: false,
-      //backgroundColor: const Color(0xff13a962),
-      appBar: buildAppBar(),
-      body: /*ChangeNotifierProvider<StationController>(
-        
-        create: (context)=>StationController(),*/
-        Builder(builder: (context){
-          return GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: /*sourceLocation*/LatLng(lat, long),
-              zoom: 18,
-            ),
-            zoomControlsEnabled: true,
-            mapType: MapType.terrain,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            compassEnabled: true,
-            //onMapCreated: local.onMapCreated,
-            markers: markers,
-            onMapCreated: (GoogleMapController gController) async{
-              _mapsController = gController;
-              getPosition();
-              loadingStation();
-              setPolylines();
-            },
-            polylines: _polylines,
-          );
-          
-        }),
-      
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Trajetória no Google Maps'),
+      ),
+      body: GoogleMap(
+        onMapCreated: (GoogleMapController controller) {
+          mapController = controller;
+        },
+        initialCameraPosition: CameraPosition(
+          target: LatLng(widget.start_.lat, widget.start_.long),
+          zoom: 12.0,
+        ),
+        markers: {
+          Marker(
+            markerId: MarkerId(widget.start_.stationId),
+            position: LatLng(widget.start_.lat,widget.start_.long),
+            infoWindow: InfoWindow(title: widget.start_.name +' (Partida)'),
+          ),
+          Marker(
+            markerId: MarkerId(widget.end_.stationId),
+            position: LatLng(widget.end_.lat, widget.end_.long),
+            infoWindow: InfoWindow(title: widget.end_.name+' (Chegada)'),
+          ),
+        },
+        polylines: {
+          Polyline(
+            polylineId: PolylineId('route'),
+            points: [LatLng(widget.start_.lat,widget.start_.long), LatLng(widget.end_.lat, widget.end_.long)],
+            color: Colors.blue,
+            width: 5,
+          ),
+        },
+      ),
     );
   }
 
-  
-  AppBar buildAppBar(){
-    return AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => const ScreenSolicitations(),
-            ));
-          },
-        ),
-        title: const Text("Trajectória"),
-        
-        foregroundColor: Colors.white,//Colors.black,
-        backgroundColor: const Color.fromARGB(255, 0, 14, 27),
-      );
-  }
 
+  AppBar buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) => const ScreenSolicitations(),
+          ));
+        },
+      ),
+      title: const Text("Trajectória"),
+
+      foregroundColor: Colors.white,
+      //Colors.black,
+      backgroundColor: const Color.fromARGB(255, 0, 14, 27),
+    );
+  }
+}
   
-  Widget modalSolicitation(BuildContext context, Station station){
+  /*Widget modalSolicitation(BuildContext context, Station station){
     Size size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
@@ -360,6 +227,6 @@ class _ScreenTrajectoryState extends State<ScreenTrajectory> {
         ],
       ),
     );
-  }
+  }*/
 
-}
+

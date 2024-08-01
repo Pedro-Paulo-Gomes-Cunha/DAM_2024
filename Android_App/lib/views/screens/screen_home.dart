@@ -4,6 +4,7 @@ import 'package:bikeshared/controllers/StationController.dart';
 import 'package:bikeshared/models/station.dart';
 import 'package:bikeshared/repositories/station_repository.dart';
 import 'package:bikeshared/views/components/station_details.dart';
+import 'package:bikeshared/views/screens/reportScreen.dart';
 import 'package:bikeshared/views/screens/screen_about.dart';
 import 'package:bikeshared/views/screens/screen_locations.dart';
 import 'package:bikeshared/views/screens/screen_login.dart';
@@ -15,6 +16,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/solicitation_service.dart';
 //import 'package:image/image.dart' as IMG;
 
 final appKey = GlobalKey();
@@ -44,6 +47,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   double lat = 0.0;
   double long = 0.0;
   String error = '';
+  String? qrResult;
 
   static const LatLng sourceLocation = LatLng(-8.8905235, 13.2274002);
   static const LatLng destination = LatLng(-8.8649484, 13.2939577);
@@ -55,6 +59,7 @@ class _ScreenHomeState extends State<ScreenHome> {
   Set<Polyline> _polylines = Set<Polyline>();
   List<LatLng> polylineCoordinates = [];
   late PolylinePoints polylinePoints;
+  Station nearestStation=Station(stationId: '0', name: '', address: '', lat: 0, long: 0, capacity: 0, freeDocks: 0, totalGets: 0, totalReturns: 0, availableBikeShared: 0);
 
 
   double degreesToRadians(double degrees) {
@@ -76,6 +81,18 @@ class _ScreenHomeState extends State<ScreenHome> {
 
     double distance = earthRadius * c;
     return distance;
+  }
+
+  void GetNearStation(){
+    double minDistance = double.infinity;
+    var stations =  StationRepository.list;
+    for (var station in stations) {
+      var distance=calculateDistance(StationController.lat, StationController.long, station.lat,station.long);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestStation = station;
+      }
+    }
   }
 
 
@@ -150,8 +167,6 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   void loadingStation() {
     var stations =  StationRepository.list;
-    print("->"+StationRepository.list.toString());
-    print("->"+StationRepository.list.length.toString());
     for (var station in stations) {
       markers.add(
         Marker(
@@ -188,15 +203,13 @@ class _ScreenHomeState extends State<ScreenHome> {
 
     getPosition();
     loadingStation ();
-
     StationController.getLocation();
+    GetNearStation();
   }
 
   @override
   
   Widget build(BuildContext context) {
-    
-
     return 
     Scaffold(
       //key: appKey,
@@ -225,7 +238,13 @@ class _ScreenHomeState extends State<ScreenHome> {
               loadingStation();
               
             },
-            polylines: _polylines,
+            polylines: //_polylines,
+             {  Polyline(
+                  polylineId: PolylineId('route'),
+                  points: [LatLng(StationController.lat,StationController.long), LatLng(nearestStation.lat, nearestStation.long)],
+                  color: Colors.blue,
+                  width: 5,
+                  )},
            /* polylines: {
               Polyline(
                 polylineId: const PolylineId("kPolyline"),
@@ -250,6 +269,29 @@ class _ScreenHomeState extends State<ScreenHome> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+         //   key: UniqueKey(),
+         //   heroTag: UniqueKey(),
+            tooltip: SolicitationService.globalHasBikeShared? 'Trancar':"Destrancar",
+            child:const Icon(Icons.qr_code_2),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QRViewScanner(
+                      onQRCodeScanned: (result) {
+                        setState(() {
+                          qrResult = result;
+                        });},
+                    ),
+                  ));
+
+             /* Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QRViewScanner()),
+              );*/
+            }
+      )
     );
   }
 
@@ -548,8 +590,8 @@ class _ScreenHomeState extends State<ScreenHome> {
                 },
 
               ),
-              
-              
+
+
             ],
           )
         ],

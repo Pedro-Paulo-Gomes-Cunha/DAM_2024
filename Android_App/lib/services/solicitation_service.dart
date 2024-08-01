@@ -20,6 +20,7 @@ class SolicitationService {
   static double long = 0.0;
   static bool globalHasBikeShared = false;
   String error = '';
+  static String station_id = "";
 
 
   static Future<List<Solicitation>> SolicitionListbyUser(String userid) async{

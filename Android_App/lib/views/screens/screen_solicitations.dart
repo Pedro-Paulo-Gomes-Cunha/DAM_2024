@@ -262,7 +262,7 @@ class _ScreenSolicitationsState extends State<ScreenSolicitations> {
                   LatLng destination = LatLng(stationFinal.lat, stationFinal.long);
                   
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => ScreenTrajectory(sourceLocation: sourceLocation, destination: destination,),
+                    builder: (context) => ScreenTrajectory(start_: stationInit, end_: stationFinal,),
                   ));
                 },
               ) 

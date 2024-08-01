@@ -17,93 +17,46 @@ class ScreenHelloWorld extends StatefulWidget {
 }
 
 class _ScreenHelloWorld extends State<ScreenHelloWorld> {
+  GoogleMapController? mapController;
 
-  GoogleMapController? _controller;
-  LatLng? _myPosition;
-  MapType _mapType = MapType.normal;
-  String? _mapStyle;
-  String meuSaldo = '';
-  String footerMessage = '';
-  void _onMapCreated(GoogleMapController controller) {
-    _controller = controller;
-    if (_mapStyle != null) {
-      _controller!.setMapStyle(_mapStyle!);
-    }
-  }
-
-  void _getCurrentLocation() async {
-    if (true) {
-      setState(() {
-        footerMessage = "Sem bicicleta";
-      });
-    } else {
-      setState(() {
-        footerMessage = "Com bicicleta";
-      });
-    }
-    Position position = await _determinePosition();
-    setState(() {
-      _myPosition = LatLng(position.latitude, position.longitude);
-    });
-  }
-
-  Future<Position> _determinePosition() async {
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        throw Exception('Location permission denied');
-      }
-    }
-    return await Geolocator.getCurrentPosition();
-  }
-
-  @override
-  void initState() {
-    _getCurrentLocation();
-    super.initState();
-  }
-
-
+  final LatLng _start = LatLng(-8.839987, 13.289437); // Ponto de partida
+  final LatLng _end = LatLng(-8.8147, 13.2307); // Ponto de chegada
 
   @override
   Widget build(BuildContext context) {
      return Scaffold(
        appBar: AppBar(
-         centerTitle: true,
-         title: const Text('Mapa'),
-         backgroundColor: Colors.blueAccent,
+         title: Text('Trajetória no Google Maps'),
        ),
-       body: _myPosition == null
-           ? const Center(child: CircularProgressIndicator())
-           : GoogleMap(
-         onMapCreated: _onMapCreated,
+       body: GoogleMap(
+         onMapCreated: (GoogleMapController controller) {
+           mapController = controller;
+         },
          initialCameraPosition: CameraPosition(
-           target: _myPosition!,
-           zoom: 15,
+           target: _start,
+           zoom: 12.0,
          ),
-         mapType: _mapType,
-         markers: _myPosition == null
-             ? Set<Marker>.identity()
-             : {
+         markers: {
            Marker(
-             markerId: MarkerId('MyPosition'),
-             position: _myPosition!,
+             markerId: MarkerId('start'),
+             position: _start,
+             infoWindow: InfoWindow(title: 'Ponto de Partida'),
+           ),
+           Marker(
+             markerId: MarkerId('end'),
+             position: _end,
+             infoWindow: InfoWindow(title: 'Ponto de Chegada'),
+           ),
+         },
+         polylines: {
+           Polyline(
+             polylineId: PolylineId('route'),
+             points: [_start, _end],
+             color: Colors.blue,
+             width: 5,
            ),
          },
        ),
-       floatingActionButton: FloatingActionButton(
-         onPressed: () {
-           setState(() {
-             _mapType =
-             _mapType == MapType.normal ? MapType.satellite : MapType.normal;
-           });
-         },
-         child: Icon(Icons.layers),
-         backgroundColor: Colors.blue,
-       ),
-       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
      );
   }
 }
